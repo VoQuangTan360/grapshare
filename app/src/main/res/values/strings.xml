@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">GrapShare</string>
+
+    <string name="login_string">Already have an account? <b>Login here</b></string>
+        <string name="API_KEY">AIzaSyCTk1d4U66Y4GPqSrfNB8VhBU4KUWP1TLY</string>
+<!--    <string name="API_KEY">AIzaSyBEqEG65xCreG9XaxaSjDiFJTYI8n4tRa4</string>-->
+<!--    <string name="API_KEY">AIzaSyBivdveQCoYAhOEMd0xCUlKsPKSaq6nSA8</string>-->
+
+    <string name="open_navigation_drawer">Open Drawer</string>
+    <string name="close_navigation_drawer">Open Drawer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

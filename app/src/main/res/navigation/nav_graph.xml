@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/btnHome">
+
+    <fragment
+        android:id="@+id/btnHome"
+        android:name="com.example.nearmekotlindemo.fragment.HomeFragment"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_btnHome_to_checkInfo"
+            app:destination="@id/checkInfo" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/btnSavedPlaces"
+        android:name="com.example.nearmekotlindemo.fragment.SavedPlaceFragment"
+        tools:layout="@layout/fragment_saved_place" >
+        <action
+            android:id="@+id/action_btnSavedPlaces_to_dialogChooseTypeCreatePost"
+            app:destination="@id/dialogChooseTypeCreatePost" />
+        <action
+            android:id="@+id/action_btnSavedPlaces_to_createPostFragment"
+            app:destination="@id/createPostFragment" />
+        <action
+            android:id="@+id/action_btnSavedPlaces_to_createPostAnotherPlaceFragment"
+            app:destination="@id/createPostAnotherPlaceFragment" />
+        <action
+            android:id="@+id/action_btnSavedPlaces_to_infoMyPostFragment"
+            app:destination="@id/infoMyPostFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/btnSetting"
+        android:name="com.example.nearmekotlindemo.fragment.SettingFragment"
+        tools:layout="@layout/fragment_setting">
+
+        <action
+            android:id="@+id/action_btnSetting_to_emailConfirmationFragment"
+            app:destination="@id/emailConfirmationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/emailChangeFragment"
+        android:name="com.example.nearmekotlindemo.fragment.EmailChangeFragment"
+        android:label="New Email"
+        tools:layout="@layout/fragment_email_change" />
+    <fragment
+        android:id="@+id/emailConfirmationFragment"
+        android:name="com.example.nearmekotlindemo.fragment.EmailConfirmationFragment"
+        android:label="fragment_email_confirmation"
+        tools:layout="@layout/fragment_email_confirmation">
+        <argument
+            android:name="isPassword"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_emailConfirmationFragment_to_passwordChangeFragment"
+            app:destination="@id/passwordChangeFragment" />
+        <action
+            android:id="@+id/action_emailConfirmationFragment_to_emailChangeFragment"
+            app:destination="@id/emailChangeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/passwordChangeFragment"
+        android:name="com.example.nearmekotlindemo.fragment.PasswordChangeFragment"
+        android:label="New Password"
+        tools:layout="@layout/fragment_password_change" />
+    <fragment
+        android:id="@+id/checkInfo"
+        android:name="com.example.nearmekotlindemo.fragment.CheckInfoFragment"
+        android:label="fragment_check_info"
+        tools:layout="@layout/fragment_check_info" >
+        <action
+            android:id="@+id/action_checkInfo_to_btnHome"
+            app:destination="@id/btnHome" />
+    </fragment>
+    <fragment
+        android:id="@+id/createPostFragment"
+        android:name="com.example.nearmekotlindemo.fragment.CreatePostFragment"
+        android:label="fragment_create_post"
+        tools:layout="@layout/fragment_create_post" >
+        <action
+            android:id="@+id/action_createPostFragment_to_btnSavedPlaces"
+            app:destination="@id/btnSavedPlaces" />
+    </fragment>
+    <dialog
+        android:id="@+id/dialogChooseTypeCreatePost"
+        android:name="com.example.nearmekotlindemo.fragment.DialogChooseTypeCreatePost"
+        android:label="DialogChooseTypeCreatePost" />
+    <fragment
+        android:id="@+id/createPostAnotherPlaceFragment"
+        android:name="com.example.nearmekotlindemo.fragment.CreatePostAnotherPlaceFragment"
+        android:label="fragment_create_post_another_place"
+        tools:layout="@layout/fragment_create_post_another_place" >
+        <action
+            android:id="@+id/action_createPostAnotherPlaceFragment_to_btnSavedPlaces"
+            app:destination="@id/btnSavedPlaces" />
+    </fragment>
+    <fragment
+        android:id="@+id/infoMyPostFragment"
+        android:name="com.example.nearmekotlindemo.fragment.InfoMyPostFragment"
+        android:label="fragment_info_my_post"
+        tools:layout="@layout/fragment_info_my_post" >
+        <action
+            android:id="@+id/action_infoMyPostFragment_to_btnSavedPlaces"
+            app:destination="@id/btnSavedPlaces" />
+    </fragment>
+    <fragment
+        android:id="@+id/btnPostINeed"
+        android:name="com.example.nearmekotlindemo.fragment.MyRequestFragment"
+        android:label="fragment_my_post_i_need"
+        tools:layout="@layout/fragment_my_post_i_need" />
+    <fragment
+        android:id="@+id/nearPlaceFragment"
+        android:name="com.example.nearmekotlindemo.fragment.NearPlaceFragment"
+        android:label="fragment_near_place"
+        tools:layout="@layout/fragment_near_place" >
+        <action
+            android:id="@+id/action_nearPlaceFragment_to_checkInfo"
+            app:destination="@id/checkInfo" />
+    </fragment>
+
+</navigation>
