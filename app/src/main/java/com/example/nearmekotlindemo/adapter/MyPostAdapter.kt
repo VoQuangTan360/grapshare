@@ -35,15 +35,18 @@ class MyPostAdapter(val itemClick: (StatusID) -> Unit): RecyclerView.Adapter<MyP
 
         holder.firstName.text = currentitem.destination
         holder.lastName.text = currentitem.timeStart
-        holder.age.text = currentitem.timeEnd
+        holder.age.text = currentitem.money
         holder.id.text = currentitem.postId
         if(currentitem.status=="1") {
             holder.tb.setTextColor(Color.RED)
+            holder.tb.text = "Có yêu cầu"
         }
         if(currentitem.status=="2") {
             holder.tb.setTextColor(Color.YELLOW)
+            holder.tb.text="Đợi phản hồi"
         }
         if(currentitem.status=="3") {
+            holder.tb.text="Đang giao dịch"
             holder.item.setBackgroundColor(R.color.teal_700)
         }
 

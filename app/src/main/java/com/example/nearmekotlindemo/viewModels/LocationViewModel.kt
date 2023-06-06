@@ -9,8 +9,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nearmekotlindemo.Post
 import com.example.nearmekotlindemo.models.googlePlaceModel.GooglePlaceModel
+import com.example.nearmekotlindemo.models.googlePlaceModel.ToaDo
 import com.example.nearmekotlindemo.repo.AppRepo
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.AuthCredential
+
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 
@@ -50,6 +53,9 @@ class LocationViewModel : ViewModel() {
     fun getPostWithUnversity(name:String){
         repository.getPostWithUnversity(name,_allUsers)
     }
+    fun createFollowTaiXe(postId: String,gps: ToaDo){
+        repository.createFollowTaiXe(postId,gps)
+    }
     fun getNearPostWithUnversity(name:String,lat:Double,lng:Double,distance:Double){
         Log.d(TAG,"kiem tra gia tri LocationViewModel setidPost: "+idPost.value)
         repository.getNearPostWithUnversity(name,lat,lng,distance,_nearPosr)
@@ -72,6 +78,7 @@ class LocationViewModel : ViewModel() {
     }
     fun getNearByPlace(url: String) = repo.getPlaces(url)
     fun getNearByPlaceUnversity(url: String) = repo.getPlaces(url)
+    fun FollowLocationTaiXe(postId: String) = repo.FollowLocationTaiXe(postId)
     fun removePlace(userSavedLocationId: ArrayList<String>) = repo.removePlace(userSavedLocationId)
 
     fun addUserPlace(googlePlaceModel: GooglePlaceModel, userSavedLocationId: ArrayList<String>) =

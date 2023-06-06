@@ -15,8 +15,10 @@ import com.example.nearmekotlindemo.models.googlePlaceModel.GooglePlaceModel
 import com.example.nearmekotlindemo.models.googlePlaceModel.Mess
 import com.example.nearmekotlindemo.models.googlePlaceModel.PostType2
 import com.example.nearmekotlindemo.models.googlePlaceModel.StatusID
+import com.example.nearmekotlindemo.models.googlePlaceModel.ToaDo
 import com.example.nearmekotlindemo.network.RetrofitClient
 import com.example.nearmekotlindemo.utility.State
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -32,11 +34,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
+import java.util.Collections
 
 class AppRepo {
 
@@ -109,6 +113,79 @@ class AppRepo {
             sendEmailVerification().await()
         }
     }
+    fun createFollowTaiXe(postId:String,gps: ToaDo){
+        val firebase = Firebase.database.getReference("FollowTaiXe")
+        firebase.child(postId).child(postId).setValue(gps)
+    }
+    fun FollowLocationTaiXe(postId: String): Flow<State<Any>> = flow<State<Any>> {
+        emit(State.loading(true))
+        var userPlaces :ToaDo
+        var userList = MutableLiveData<ToaDo> ()
+
+        val database =
+            Firebase.database.getReference("FollowTaiXe").child(postId)
+
+        val data = database.get().await()
+        database.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val post = snapshot.getValue(ToaDo::class.java)
+                Log.d(TAG,"kiem tra FollowLocationTaiXe : "+post)
+                try {
+
+                    var  userPlaces : List<ToaDo> = snapshot.children.map { dataSnapshot ->
+
+                        dataSnapshot.getValue(ToaDo::class.java)!!
+
+                    }
+                    userList.value=userPlaces[0]
+
+                    Log.d(TAG,"kiem tra FollowLocationTaiXe : "+ userList.value)
+
+                }catch (e : Exception){
+
+
+                }
+
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+
+        })
+
+
+//        if (data.exists()) {
+//
+//            for (ds in data.children) {
+//
+//                Log.d(TAG,"kiem tra FollowLocationTaiXe : "+data.value)
+//
+//                val placeId = ds.getValue(ToaDo::class.java) as ToaDo
+//                Log.d(TAG,"kiem tra FollowLocationTaiXe1: "+placeId)
+//                if (placeId != null) {
+//                    userPlaces= placeId
+//                    emit(State.success(userPlaces))
+//
+//                }
+//            }
+//        }
+//        else{
+//            emit(State.Failed("loi"))
+//        }
+
+
+    }.flowOn(Dispatchers.IO)
+        .catch {
+            if (it.message.isNullOrEmpty()) {
+                emit(State.failed("No route found"))
+            } else {
+                emit(State.failed(it.message.toString()))
+            }
+
+        }
 
     fun forgetPassword(email: String): Flow<State<Any>> = flow<State<Any>> {
         emit(State.loading(true))
@@ -314,6 +391,7 @@ class AppRepo {
 
     }
 
+
     fun  addPosttype2(post: PostType2)= flow<State<Any>> {
         emit(State.loading(true))
         val database = Firebase.database.getReference("Post")
@@ -389,6 +467,7 @@ class AppRepo {
         }
 //        return userPlaces
     }
+
     fun  getMyPostWithUnversity(userList : MutableLiveData<List<Post>>) {
         val mIssuePosts = ArrayList<Post>()
 //        val database = Firebase.database.getReference("Post").child("PostType1").child("tanvo360")
@@ -666,16 +745,15 @@ class AppRepo {
         var gmail=auth.toString().replace("@gmail.com","")
         val db = Firebase.firestore
             db.collection("Request")
-                .whereEqualTo("gmail",gmail)
-//                .orderBy("")
+//                .whereEqualTo("gmail",gmail)
+                .orderBy("status")
                 .get()
                 .addOnSuccessListener { result ->
                     if(!result.isEmpty){
                         for(data in result.documents){
-
                             val postItem:Mess? = data.toObject(Mess::class.java)
                             Log.d(TAG,"kiem tra data getMyRequestWithID: "+postItem)
-                            if(postItem!=null){
+                            if(postItem!=null && postItem.gmail==gmail){
                                 mIssuePosts.add(postItem)
                             }
 

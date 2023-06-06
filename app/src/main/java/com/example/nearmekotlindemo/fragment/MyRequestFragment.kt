@@ -51,7 +51,12 @@ class MyRequestFragment : Fragment() {
         userRecyclerView = view.findViewById(R.id.recyclerViewMR)
         userRecyclerView.layoutManager = LinearLayoutManager(context)
         userRecyclerView.setHasFixedSize(true)
-        adapterpost = MyRequestAdapter {}
+        adapterpost = MyRequestAdapter {
+            val fragment: Fragment = FollowTaiXeFragment()
+            val transaction = fragmentManager?.beginTransaction()
+            transaction?.replace(R.id.fragmentContainer,fragment)?.commit()
+
+        }
 //            locationViewModel .setpost(it)
 //            it.let {
 //

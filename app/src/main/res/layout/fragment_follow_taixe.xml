@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="fragment.HomeFragment">
+
+    <fragment
+        android:id="@+id/homeMap"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinate"
+        android:layout_width="match_parent"
+        android:layout_height="120dp">
+
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/map_background"
+            android:elevation="5dp" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    <HorizontalScrollView
+        android:id="@+id/placesList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/coordinate"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/placesGroup"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleLine="true"
+            app:singleSelection="true" />
+
+    </HorizontalScrollView>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnMapType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/placesList"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="15dp"
+        android:src="@drawable/ic_map_type"
+        app:backgroundTint="@color/white"
+        app:fabCustomSize="40dp"
+        app:tint="@color/primaryColor" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/enableTraffic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnMapType"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_traffic"
+        app:backgroundTint="@color/white"
+        app:fabCustomSize="40dp"
+        app:tint="@color/itemTextColor" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/currentLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/enableTraffic"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/ic_my_location"
+        app:backgroundTint="@color/white"
+        app:fabCustomSize="50dp"
+        app:tint="@color/primaryColor" />
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/placesRecyclerView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginBottom="26dp"-->
+<!--        android:clipToPadding="false"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:paddingLeft="8dp"-->
+<!--        android:paddingRight="8dp"-->
+<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--        tools:listitem="@layout/place_item_layout" />-->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentEnd="true"
+    android:paddingHorizontal="10dp"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginStart="0dp"
+    android:layout_marginBottom="31dp"
+    android:orientation="horizontal"
+
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/backgroung_boder"
+        android:weightSum="2">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="0.5"
+            android:scaleType="centerCrop"
+            android:src="@color/black" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:orientation="vertical"
+            android:padding="10dp"
+            >
+
+            <RelativeLayout
+                android:id="@+id/rating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/txtPlaceDRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="3"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/ic_rating"
+                    app:drawableTint="@color/primaryColor" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/txtPlaceDRating"
+                    android:gravity="center"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="1dp"
+                    android:paddingTop="2dp"
+                    android:text="(123)"
+                    android:textColor="@color/itemTextColor" />
+
+
+
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/txtPlaceName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Vox Quang Taans"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtPlaceAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Đang đi"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+
+
+
+</RelativeLayout>

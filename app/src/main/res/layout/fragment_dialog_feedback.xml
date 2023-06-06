@@ -5,7 +5,6 @@
     android:orientation="vertical"
     android:name="androidx.navigation.fragment.NavHostFragment"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="20dp"
     app:cardBackgroundColor="@color/textColor"
     app:cardCornerRadius="20dp">
     <LinearLayout
@@ -13,7 +12,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="20dp">
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="20dp"
+        android:minWidth="520dp"
+        >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,6 +64,7 @@
                 android:layout_marginHorizontal="50dp"
                 android:layout_marginStart="70dp"
                 android:text="Vehicle"
+                android:fontFamily="@font/comfortaabold"
                 android:textColor="@color/itemTextColor"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -86,7 +89,7 @@
                     android:id="@+id/txtDestinationF"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="55dp"
+                    android:layout_marginStart="25dp"
                     android:textColor="@color/itemTextColor"
                     android:text="20:20"
                     android:textSize="18sp"/>
@@ -112,12 +115,69 @@
                     android:id="@+id/textTimeStartF"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="25dp"
+
                     android:textColor="@color/teal_700"
                     android:text="20:20"
                     android:textSize="18sp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tin nhắn"
+                    android:layout_marginHorizontal="16dp"
+
+                    android:textColor="@color/black"
+
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textMess"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:textColor="@color/teal_700"
+                    android:text="20:20"
+                    android:fontFamily="@font/comfortaabold"
+                    android:textSize="18sp"/>
+
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tin nhắn"
+                    android:layout_marginHorizontal="16dp"
+
+                    android:textColor="@color/black"
+
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textMess111"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:textColor="@color/teal_700"
+                    android:text="123456789"
+                    android:fontFamily="@font/comfortaabold"
+                    android:textSize="18sp"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -132,6 +192,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/backgroung_gray"
                 android:text="Thoát"
+                android:visibility="gone"
                 android:textColor="@color/textColor"
                 />
             <androidx.appcompat.widget.AppCompatButton
@@ -143,13 +204,13 @@
                 android:text="Từ chối"
                 android:textColor="@color/textColor"
                 />
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnYes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/backgroung_green"
                 android:text="Chấp nhận"
-                android:textSize="12dp"
+                android:textColor="@color/textColor"
                 />
         </LinearLayout>
     </LinearLayout>

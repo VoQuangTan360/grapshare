@@ -7,15 +7,40 @@
     app:cardCornerRadius="8dp"
     android:id="@+id/postItem"
     android:backgroundTint="@color/accentColor"
-    android:layout_margin="16dp">
+    android:layout_margin="10dp">
+
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginVertical="6dp"
         android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="end"
+            android:gravity="center">
+            <!--       android:background="@drawable/ic_notification"-->
+            <!--        android:backgroundTint="@color/blue"-->
 
+            <TextView
+                android:id="@+id/txtTB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="đang chờ"
+                android:textSize="18sp"
+                android:textColor="@color/blue"/>
+            <TextView
+                android:id="@+id/txtIDM"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="1sp"
+                android:textColor="@color/Daryellow"></TextView>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,17 +50,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Destination: "
                 android:fontFamily="@font/playfair_display"
+                android:text="Nơi đến: "
                 android:textColor="@color/Daryellow"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvfirstName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="25dp"
 
                 android:text="Arya"
                 android:textColor="@color/textColor"
@@ -52,7 +77,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Time start: "
+                android:text="Thời gian: "
                 android:textColor="@color/Daryellow"
                 android:textSize="20sp"
                 android:textStyle="bold"/>
@@ -77,7 +102,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Time finish: "
+                android:text="Số tiền:  "
                 android:textColor="@color/Daryellow"
                 android:textSize="20sp"
                 android:textStyle="bold"/>
@@ -86,7 +111,7 @@
                 android:id="@+id/tvage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="27dp"
                 android:text="18"
                 android:textColor="@color/textColor"
                 android:textSize="20sp"/>
@@ -95,30 +120,30 @@
 
 
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-       android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_gravity="end"
-        android:gravity="center">
-<!--       android:background="@drawable/ic_notification"-->
-<!--        android:backgroundTint="@color/blue"-->
+<!--    <LinearLayout-->
+<!--        android:layout_width="30dp"-->
+<!--        android:layout_height="30dp"-->
+<!--       android:layout_marginTop="5dp"-->
+<!--        android:layout_marginEnd="10dp"-->
+<!--        android:layout_gravity="end"-->
+<!--        android:gravity="center">-->
+<!--&lt;!&ndash;       android:background="@drawable/ic_notification"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:backgroundTint="@color/blue"&ndash;&gt;-->
 
-    <TextView
-        android:id="@+id/txtTB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="*"
-        android:textSize="30sp"
-        android:textColor="@color/blue"/>
-        <TextView
-            android:id="@+id/txtIDM"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="1sp"
-        android:textColor="@color/Daryellow"></TextView>
-    </LinearLayout>
+<!--    <TextView-->
+<!--        android:id="@+id/txtTB1"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="*"-->
+<!--        android:textSize="30sp"-->
+<!--        android:textColor="@color/blue"/>-->
+<!--        <TextView-->
+<!--            android:id="@+id/txtIDM1"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text=""-->
+<!--        android:textSize="1sp"-->
+<!--        android:textColor="@color/Daryellow"></TextView>-->
+<!--    </LinearLayout>-->
 
 </androidx.cardview.widget.CardView>
