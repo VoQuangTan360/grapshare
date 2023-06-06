@@ -110,6 +110,7 @@
         app:fabCustomSize="50dp"
         app:tint="@color/primaryColor" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+
         android:id="@+id/drawLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -121,6 +122,7 @@
         android:layout_marginBottom="15dp"
         android:src="@drawable/ic_riseoutlined"
         app:backgroundTint="@color/white"
+        android:background="@color/black"
         app:fabCustomSize="50dp"
         app:tint="@color/primaryColor" />
     <androidx.recyclerview.widget.RecyclerView

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:name="androidx.navigation.fragment.NavHostFragment"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="20dp"
+    app:cardBackgroundColor="@color/textColor"
+    app:cardCornerRadius="20dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Xác nhận "
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/teal_700"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+          >
+
+
+            <TextView
+                android:id="@+id/txtIDR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="1sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/txtIDP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="1sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/txtStartPositionF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="50dp"
+                android:gravity="center"
+                android:layout_marginStart="10dp"
+                android:text="Tài xế đã chấp nhận yêu cầu của bạn, mời xác nhận yêu cầu của bạn"
+                android:textColor="@color/itemTextColor"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnDeny"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/backgroung_red"
+                android:text="Từ chối"
+                android:textColor="@color/textColor"
+                />
+            <Button
+                android:id="@+id/btnYes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/backgroung_green"
+                android:text="xác nhận"
+                android:textSize="12dp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

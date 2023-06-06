@@ -28,7 +28,7 @@ class MyRequestAdapter(val itemClick: (Mess) -> Unit): RecyclerView.Adapter<MyRe
 
     }
     override fun onBindViewHolder(holder: MyViewHolder, @SuppressLint("RecyclerView") position: Int) {
-        val currentitem = userList[position]
+        val currentitem = userList[userList.size-1-position]
 
         holder.Destination.text = currentitem.end
         holder.StartPosition.text = currentitem.start
@@ -51,6 +51,7 @@ class MyRequestAdapter(val itemClick: (Mess) -> Unit): RecyclerView.Adapter<MyRe
             object :View.OnClickListener{
                 override fun onClick(p0: View?) {
                     itemClick(currentitem)
+
 
                 }
 

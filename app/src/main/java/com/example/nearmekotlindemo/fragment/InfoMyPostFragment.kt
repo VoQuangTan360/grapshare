@@ -45,10 +45,7 @@ class InfoMyPostFragment : Fragment() {
         val model1 = ViewModelProvider(requireActivity()).get(PostViewModel::class.java)
         model1.setpostMess(Mess())
         binding = FragmentInfoMyPostBinding.inflate(inflater, container, false)
-
-
         loadingDialog = LoadingDialog(requireActivity())
-
         return binding.root
     }
 

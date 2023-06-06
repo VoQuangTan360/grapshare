@@ -30,6 +30,9 @@ class LoginActivity : AppCompatActivity() {
         binding.btnSignUp.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
         }
+        binding.edtEmail.setOnClickListener {
+            binding.edtEmail.hint=""
+        }
 
         binding.txtForgetPassword.setOnClickListener {
 
