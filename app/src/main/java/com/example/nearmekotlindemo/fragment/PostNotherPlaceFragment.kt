@@ -141,9 +141,7 @@ GoogleMap.OnMarkerClickListener {
         autoComplete.onItemClickListener= AdapterView.OnItemClickListener { adapterView, view, i, l ->
             mMap.clear()
             if(adapterView.getItemAtPosition(i).toString().equals("DH Su Pham Ky Thuat")){
-
                 var td= LatLng(16.078179,108.212011)
-
                 mMap.addMarker(
                     MarkerOptions().position(td).icon(
                         BitmapDescriptorFactory
@@ -247,10 +245,10 @@ GoogleMap.OnMarkerClickListener {
 //                getNearByPlace(placeModel.placeType)
 //            }
         }
+        viewModel.getAllPostWithUnversityPlance()
         viewModel.allUsers.observe(viewLifecycleOwner, Observer {
             Log.d(ContentValues.TAG,"kiem tra data HomeFragent allUsers: "+it)
             if(it.toString().isNotEmpty()){
-
                 for(item in it){
                     var info: Post =item
                     var td= LatLng(info.lat,info.lng)
@@ -260,8 +258,6 @@ GoogleMap.OnMarkerClickListener {
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(td))
                 }
             }
-
-
         })
 
 //        setUpRecyclerView()

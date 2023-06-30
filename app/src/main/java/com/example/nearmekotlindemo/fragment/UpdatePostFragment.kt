@@ -30,18 +30,22 @@ import androidx.navigation.Navigation
 import com.example.nearmekotlindemo.Post
 import com.example.nearmekotlindemo.R
 import com.example.nearmekotlindemo.databinding.FragmentCreatePostBinding
+import com.example.nearmekotlindemo.models.googlePlaceModel.StatusID
 import com.example.nearmekotlindemo.utility.LoadingDialog
 import com.example.nearmekotlindemo.utility.State
 import com.example.nearmekotlindemo.viewModels.PostViewModel
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 import java.util.Calendar
 
 
-class CreatePostFragment : Fragment() {
+class UpdatePostFragment : Fragment() {
     private val locationViewModel: PostViewModel by viewModels<PostViewModel>()
     private lateinit var currentLocation: Location
     private lateinit var loadingDialog: LoadingDialog
+    lateinit var model: PostViewModel
     var post = MutableLiveData<Post>(Post("0","2","tanvo360","Su Pham Ky Thuat","1","car",
      "8:30","9:00","di le dai hanh",12.000,13.000,""))
 //    val post= Post("1","2","tanvo360","Su Pham Ky Thuat","car",
@@ -59,16 +63,45 @@ class CreatePostFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadingDialog = LoadingDialog(requireActivity())
+        model = ViewModelProvider(requireActivity()).get(PostViewModel::class.java)
+        val mIssuePosts = ArrayList<Post>()
+        var idpost :String=""
+        if(arguments?.getString("idPost") !=null){
+            model.setstatustChooseChane(StatusID(arguments?.getString("idPost")!!,"0"))
+            idpost=arguments?.getString("idPost")!!
+        }
 
+        val db = Firebase.firestore
+        Log.d(TAG, "kiem tra gia tri cua idpost trong van post: " +id)
+        db.collection("PostWithUniversity")
+            .whereEqualTo("postId", idpost)
+            .get()
+            .addOnSuccessListener { result ->
+                if(!result.isEmpty){
+                    for(data in result.documents){
+                        Log.d(TAG, "kiem tra truy van post voi id:" +data.toString())
+                        val postItem:Post? = data.toObject(Post::class.java)
+                        if(postItem!=null){
+                            mIssuePosts.add(postItem)
+                            binding.textTimeStart.text=postItem.timeStart
+                            binding.EDTPayMoney.hint=postItem.money
+                            binding.textdescribe.hint=postItem.describe
+                        }
 
-        val model1 = ViewModelProvider(requireActivity()).get(PostViewModel::class.java)
-        model1.statusfinish.observe(viewLifecycleOwner, Observer {
-            if(it.length==2){
-                Log.d(TAG,"co chay nha")
-                Navigation.findNavController(view)
-                    .navigate(R.id.action_createPostFragment_to_btnSavedPlaces)
+                    }
+
+                }
+                for (document in result) {
+
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                }
             }
-        })
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting documents: ", exception)
+            }
+
+
+
         val item = listOf("DH Su Pham Ky Thuat","DH Duy Tan (CS1)","DH Kinh Te")
 
         val adapter = ArrayAdapter(requireContext() ,R.layout.list_item_school,item)
@@ -144,26 +177,20 @@ class CreatePostFragment : Fragment() {
                     getCurrentLocation()
                     loadingDialog.startLoading()
                     delay(2000)
-
-                    locationViewModel.addPost(post.value as Post).collect{
-                        when (it) {
-                            is State.Loading -> {
-                                if (it.flag == true) {
-
-                                }
-                            }
-
-                            is State.Success -> {
-
-
-
-                            }
-                            is State.Failed -> {
-
-
+                    val db = Firebase.firestore
+                    db.collection("PostWithUniversity")
+                        .whereEqualTo("postId", idpost)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            for (document in documents) {
+                                Log.d(TAG, "xem co update postid khong"+idpost)
+                                db.collection("PostWithUniversity")
+                                    .add(post.value as Post )
                             }
                         }
-                    }
+                        .addOnFailureListener { exception ->
+                            Log.w(TAG, "Error getting documents: ", exception)
+                        }
                     loadingDialog.stopLoading()
                     val  showDialog =dialogmess()
                     showDialog.show((activity as AppCompatActivity).supportFragmentManager,"thong bao")

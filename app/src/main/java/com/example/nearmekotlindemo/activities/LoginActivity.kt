@@ -58,6 +58,8 @@ class LoginActivity : AppCompatActivity() {
                                     Snackbar.LENGTH_SHORT
                                 ).show()
 
+
+
                                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                                 startActivity(intent)
                                 finish()

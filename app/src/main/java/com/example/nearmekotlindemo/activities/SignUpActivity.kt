@@ -86,7 +86,7 @@ class SignUpActivity : AppCompatActivity() {
                 } else {
                     Snackbar.make(
                         binding.root,
-                        "Please select image",
+                        "Hãy chọn ảnh",
                         Snackbar.LENGTH_SHORT
                     ).show()
                 }

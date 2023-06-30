@@ -1,7 +1,9 @@
 package com.example.nearmekotlindemo.adapter
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,11 +36,19 @@ class NearPlacePostAdapter(val itemClick: (List<Post>) -> Unit): RecyclerView.Ad
 //        holder.Destination.text = currentitem.end
 //        holder.StartPosition.text = currentitem.start
 //        holder.TimeStart.text = currentitem.time
-        holder.money.setText(currentitem.money)
-        holder.time.setText(currentitem.timeStart)
-        holder.Timedate.setText(currentitem.timeEnd)
-        holder.Vehicle.setText(currentitem.vehicle)
-        holder.desccriblen.setText(currentitem.describe)
+//        binding.txtDestination.text=itemPost.destination
+//        binding.textVehicle.text=itemPost.vehicle
+//        binding.txtMoney.text=itemPost.money+" VND"
+//        binding.textdate.text=itemPost.timeEnd
+//        binding.textTimeStart.text=itemPost.timeStart
+//        binding.txtDescrible.text=itemPost.describe
+
+        holder.txtDestination.setText(currentitem.destination)
+        holder.textVehicle.setText(currentitem.vehicle)
+        holder.txtMoney.setText(currentitem.money+" VND")
+        holder.textdate.setText(currentitem.timeEnd)
+        holder.textTimeStart.setText(currentitem.timeStart)
+        holder.txtDescrible.setText(currentitem.describe)
 
         holder.item.setOnClickListener (
             object :View.OnClickListener{
@@ -62,7 +72,7 @@ class NearPlacePostAdapter(val itemClick: (List<Post>) -> Unit): RecyclerView.Ad
     }
 
     fun updateUserList(mess : List<Post>){
-
+        Log.d(TAG,"kiem tra List<Post>: "+mess)
         this.userList.clear()
         this.userList.addAll(mess)
         notifyDataSetChanged()
@@ -71,11 +81,12 @@ class NearPlacePostAdapter(val itemClick: (List<Post>) -> Unit): RecyclerView.Ad
 
     class  MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
 
-        val money : TextView = itemView.findViewById(R.id.txtMoneyN)
-        val time : TextView = itemView.findViewById(R.id.textTimeStartN)
-        val Timedate: TextView = itemView.findViewById(R.id.textdateN)
-        val Vehicle: TextView = itemView.findViewById(R.id.textVehicleN)
-        val desccriblen: TextView = itemView.findViewById(R.id.txtDescribleN)
+        val txtDestination : TextView = itemView.findViewById(R.id.txtDestination)
+        val textVehicle : TextView = itemView.findViewById(R.id.textVehicle)
+        val txtMoney: TextView = itemView.findViewById(R.id.txtMoney)
+        val textdate: TextView = itemView.findViewById(R.id.textdate)
+        val textTimeStart: TextView = itemView.findViewById(R.id.textTimeStart)
+        val txtDescrible: TextView = itemView.findViewById(R.id.txtDescrible)
         val item: CardView  = itemView.findViewById(R.id.postItemN)
 
 

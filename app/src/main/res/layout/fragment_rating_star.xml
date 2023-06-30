@@ -16,11 +16,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thông báo"
+            android:text="ĐÁNH GIÁ"
             android:layout_marginBottom="20dp"
             android:textColor="@color/teal_700"
             android:textStyle="bold"
             android:textSize="25dp"
+            />
+        <RatingBar
+            android:id="@+id/ratingVote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1"
+            android:rating="4"
+            android:progressTint="@color/Daryellow"
             />
         <TextView
             android:id="@+id/txtMessNotification"
@@ -29,7 +38,7 @@
             android:layout_marginVertical="10dp"
             android:maxLines="2"
             android:textColor="@color/black"
-            android:text="Grapshare sẽ lấy vị trí hện tại để làm nơi xuất phát"
+            android:text="Đánh giá tài xế"
             android:textSize="15sp"/>
 
         <LinearLayout

@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         mainBinding = navigationDrawerLayoutBinding.mainActivity
         toolbarLayoutBinding = mainBinding.toolbarMain
 
-        setSupportActionBar(toolbarLayoutBinding.toolbar)
+//        setSupportActionBar(toolbarLayoutBinding.toolbar)
 
         firebaseAuth = Firebase.auth
 

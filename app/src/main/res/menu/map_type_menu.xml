@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/btnNormal"
-        android:title="Default"/>
+        android:title="Mặc định"/>
 
     <item
         android:id="@+id/btnSatellite"
-        android:title="Satellite"/>
+        android:title="Ảnh vệ tinh"/>
 
     <item
         android:id="@+id/btnTerrain"
-        android:title="Terrain"/>
+        android:title="Địa hình"/>
 </menu>

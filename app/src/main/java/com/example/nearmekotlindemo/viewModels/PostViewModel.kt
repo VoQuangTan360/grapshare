@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.nearmekotlindemo.Post
 import com.example.nearmekotlindemo.models.googlePlaceModel.Mess
 import com.example.nearmekotlindemo.models.googlePlaceModel.PostType2
+import com.example.nearmekotlindemo.models.googlePlaceModel.Star
 import com.example.nearmekotlindemo.models.googlePlaceModel.StatusID
 import com.example.nearmekotlindemo.repo.AppRepo
 import kotlinx.coroutines.async
@@ -32,6 +33,13 @@ class PostViewModel:ViewModel() {
     fun setstatusPost(string1: String){
         statusPost.value=string1
     }
+
+    val statustChooseChane = MutableLiveData<StatusID>()
+    fun setstatustChooseChane(string1: StatusID){
+        statustChooseChane.value=string1
+    }
+
+
     val postMess = MutableLiveData<Mess>()
     fun setpostMess(string1: Mess){
         postMess.value=string1
@@ -65,12 +73,23 @@ class PostViewModel:ViewModel() {
     private val _mess = MutableLiveData<List<Mess>>()
     val mess : LiveData<List<Mess>> = _mess
 
+    private val _star = MutableLiveData<Star>()
+    val star : LiveData<Star> = _star
+
+    private val _image = MutableLiveData<List<String>>()
+    val image : LiveData<List<String>> = _image
+
     private val _request = MutableLiveData<List<Mess>>()
     val request : LiveData<List<Mess>> = _request
     fun getRequseMess(statusID: StatusID){
         repository.getRequestWithID(statusID,_mess)
 
     }
+    fun getRequseStar(gmail: String){
+        repository.getRequestStar(gmail,_star)
+
+    }
+
     fun getMyRequseMess(){
         repository.getMyRequestWithID(_request)
 
@@ -78,18 +97,22 @@ class PostViewModel:ViewModel() {
     fun updateStatusPost(id:String,status:String){
         repository.updateStatusPostWithID(id,status)
     }
+
     fun updateStatusRequest(id:String,status:String){
         repository.updateStatusRequestWithID(id,status)
     }
     fun addPostAnotherPlace(status:PostType2){
         repository.addPostAnotherPlace(status)
     }
+    fun getMyPostWithUnversity(){
+        repository.getMyPostWithUnversity(_allUsers)
+    }
 
     init {
 
         repository = AppRepo().getInstance()
 //        repository.getMyPost(_allUsers)
-        repository.getMyPostWithUnversity(_allUsers)
+//        repository.getMyPostWithUnversity(_allUsers)
         Log.d(TAG,"kiem tra co chay PostViewModel _allUsers: "+_allUsers.value)
         Log.d(TAG,"kiem tra co chay PostViewModel allUsers: "+ allUsers.value)
 

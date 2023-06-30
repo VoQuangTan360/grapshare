@@ -6,15 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nearmekotlindemo.Post
 import com.example.nearmekotlindemo.R
-import com.example.nearmekotlindemo.fragment.CreatePostFragment
-import com.example.nearmekotlindemo.fragment.InfoMyPostFragment
 import com.example.nearmekotlindemo.models.googlePlaceModel.StatusID
 
 class MyPostAdapter(val itemClick: (StatusID) -> Unit): RecyclerView.Adapter<MyPostAdapter.MyViewHolder>() {
@@ -43,20 +39,26 @@ class MyPostAdapter(val itemClick: (StatusID) -> Unit): RecyclerView.Adapter<MyP
         }
         if(currentitem.status=="2") {
             holder.tb.setTextColor(Color.YELLOW)
-            holder.tb.text="Đợi phản hồi"
+            holder.tb.text="Giao dịch"
         }
         if(currentitem.status=="3") {
-            holder.tb.text="Đang giao dịch"
-            holder.item.setBackgroundColor(R.color.teal_700)
+            holder.tb.setTextColor(Color.YELLOW)
+            holder.tb.text="Hoàn thành"
+//            holder.item.setBackgroundColor(R.color.teal_700)
         }
+        if(currentitem.status=="0") {
+            holder.tb.setTextColor(Color.WHITE)
+            holder.tb.text="Đang chờ"
+//            holder.item.setBackgroundColor(R.color.teal_700)
+        }
+
 
         holder.item.setOnClickListener (
             object :View.OnClickListener{
                 override fun onClick(p0: View?) {
 
                     itemClick(StatusID(currentitem.postId.toString(),currentitem.status.toString()) )
-
-                    if (p0 != null) {
+                    if (p0 != null && currentitem.status!="0" && currentitem.status!="3") {
                         Navigation.findNavController(p0)
                             .navigate(R.id.action_btnSavedPlaces_to_infoMyPostFragment)
                     }
@@ -77,7 +79,6 @@ class MyPostAdapter(val itemClick: (StatusID) -> Unit): RecyclerView.Adapter<MyP
     }
 
     fun updateUserList(userList : List<Post>){
-
         this.userList.clear()
         this.userList.addAll(userList)
         notifyDataSetChanged()

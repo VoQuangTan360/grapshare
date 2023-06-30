@@ -54,7 +54,7 @@
                 android:gravity="center"
                 android:layout_marginStart="10dp"
                 android:text="Tài xế đã chấp nhận yêu cầu của bạn, mời xác nhận yêu cầu của bạn"
-                android:textColor="@color/itemTextColor"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>

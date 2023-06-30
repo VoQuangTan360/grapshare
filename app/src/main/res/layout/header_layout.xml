@@ -15,14 +15,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/primaryColor">
+            android:background="@color/black">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:alpha="0.8"
                 android:scaleType="centerCrop"
-                android:src="@drawable/header_background" />
+                android:src="@drawable/anhtruong" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -44,6 +44,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
                     android:text="Muhammad Adnan"
+                    android:background="@color/itemTextColor"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
@@ -53,6 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="2dp"
+                    android:background="@color/itemTextColor"
                     android:text="MuhammadAdnan@gmail.com"
                     android:textColor="@color/white"
                     android:textStyle="bold" />

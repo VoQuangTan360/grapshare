@@ -12,20 +12,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.nearmekotlindemo.Post
 import com.example.nearmekotlindemo.R
-import com.example.nearmekotlindemo.adapter.MyPostAdapter
 import com.example.nearmekotlindemo.adapter.RequestMyPostAdapter
-import com.example.nearmekotlindemo.adapter.SavedPlaceAdapter
 import com.example.nearmekotlindemo.databinding.FragmentInfoMyPostBinding
-import com.example.nearmekotlindemo.databinding.FragmentSavedPlaceBinding
 import com.example.nearmekotlindemo.models.googlePlaceModel.Mess
 import com.example.nearmekotlindemo.utility.LoadingDialog
-import com.example.nearmekotlindemo.viewModels.LocationViewModel
 import com.example.nearmekotlindemo.viewModels.PostViewModel
 
 
-class InfoMyPostFragment : Fragment() {
+class ChooseTaiXeMyPostFragment : Fragment() {
     private lateinit var loadingDialog: LoadingDialog
     private lateinit var binding: FragmentInfoMyPostBinding
     private val postViewModel: PostViewModel by viewModels()
@@ -57,12 +52,22 @@ class InfoMyPostFragment : Fragment() {
         val model1 = ViewModelProvider(requireActivity()).get(PostViewModel::class.java)
         model1.idPost.observe(viewLifecycleOwner,Observer{
             postViewModel.getRequseMess(it)
+
         })
 
         model1.postMess.observe(viewLifecycleOwner,Observer{
+            if(it.status=="2"){
+                val fragment: Fragment = FollowTaiXeFragment()
+                val bundle = Bundle()
+                bundle.putString("idPost", it.postId)
+                bundle.putString("gmail", it.gmail)
+                fragment.arguments = bundle
+                val transaction = fragmentManager?.beginTransaction()
+                transaction?.replace(R.id.fragmentContainer,fragment)?.commit()
+            }else
             if(it.postId.length!=0) {
                 val showDialog = DialogFeeback()
-                showDialog.show((activity as AppCompatActivity).supportFragmentManager, "thong bao")
+                showDialog.show((activity as AppCompatActivity).supportFragmentManager, "Yêu cầu")
             }
         })
 
@@ -70,6 +75,7 @@ class InfoMyPostFragment : Fragment() {
 
         viewModel.mess.observe(viewLifecycleOwner, Observer {
             adapterpost.updateUserList(it)
+
         })
         userRecyclerView = view.findViewById(R.id.recyclerViewR)
         userRecyclerView.layoutManager = LinearLayoutManager(context)

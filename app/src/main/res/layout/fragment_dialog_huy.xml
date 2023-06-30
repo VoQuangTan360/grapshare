@@ -29,7 +29,7 @@
             android:layout_marginVertical="10dp"
             android:maxLines="2"
             android:textColor="@color/black"
-            android:text="Grapshare sẽ lấy vị trí hện tại để làm nơi xuất phát"
+            android:text="Nếu hủy số sao của bạn sẽ bị trừ"
             android:textSize="15sp"/>
 
         <LinearLayout
@@ -45,13 +45,14 @@
                 android:text="thoát"
                 android:textColor="@color/blue"
                 />
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnYes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
-                android:background="@drawable/backgroung_green"
+                android:background="@drawable/backgroung_red"
                 android:text="Đồng ý"
+                android:textColor="@color/blue"
                 />
         </LinearLayout>
     </LinearLayout>

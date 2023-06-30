@@ -31,7 +31,7 @@ class MyRequestAdapter(val itemClick: (Mess) -> Unit): RecyclerView.Adapter<MyRe
         val currentitem = userList[userList.size-1-position]
 
         holder.Destination.text = currentitem.end
-        holder.StartPosition.text = currentitem.start
+        holder.StartPosition.text = currentitem.mess
         holder.TimeStart.text = currentitem.time
         if(currentitem.status=="1"){
             holder.iconWait.isVisible=true

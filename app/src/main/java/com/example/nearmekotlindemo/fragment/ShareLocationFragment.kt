@@ -1,7 +1,6 @@
-package com.example.nearmekotlindemo. fragment
+package com.example.nearmekotlindemo.fragment
 
 import android.Manifest
-import com.example.nearmekotlindemo.R
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
@@ -17,9 +16,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -27,36 +23,23 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SnapHelper
-import com.bumptech.glide.Glide
 import com.example.nearmekotlindemo.Post
-import com.example.nearmekotlindemo.UserModel
+import com.example.nearmekotlindemo.R
 import com.example.nearmekotlindemo.activities.DirectionActivity
 import com.example.nearmekotlindemo.adapter.DirectionStepAdapter
 import com.example.nearmekotlindemo.adapter.GooglePlaceAdapter
 import com.example.nearmekotlindemo.adapter.InfoWindowAdapter
-import com.example.nearmekotlindemo.constant.AppConstant
-import com.example.nearmekotlindemo.databinding.FragmentHomeBinding
-import com.example.nearmekotlindemo.fragment.CheckInfoFragment
-import com.example.nearmekotlindemo.fragment.DatePickerFragment
-import com.example.nearmekotlindemo.fragment.PostNotherPlaceFragment
+import com.example.nearmekotlindemo.databinding.FragmentShareLocationBinding
 import com.example.nearmekotlindemo.interfaces.NearLocationInterface
 import com.example.nearmekotlindemo.models.googlePlaceModel.GooglePlaceModel
-import com.example.nearmekotlindemo.models.googlePlaceModel.GoogleResponseModel
-import com.example.nearmekotlindemo.models.googlePlaceModel.PostInfo
+import com.example.nearmekotlindemo.models.googlePlaceModel.StatusID
 import com.example.nearmekotlindemo.models.googlePlaceModel.ToaDo
-import com.example.nearmekotlindemo.models.googlePlaceModel.University
 import com.example.nearmekotlindemo.models.googlePlaceModel.directionPlaceModel.DirectionLegModel
 import com.example.nearmekotlindemo.models.googlePlaceModel.directionPlaceModel.DirectionResponseModel
 import com.example.nearmekotlindemo.models.googlePlaceModel.directionPlaceModel.DirectionRouteModel
@@ -74,27 +57,21 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.crashlytics.internal.model.CrashlyticsReport.Session.User
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.google.maps.android.SphericalUtil
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 
-class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
+class ShareLocationFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
     GoogleMap.OnMarkerClickListener {
-
-
-    private lateinit var binding: FragmentHomeBinding
+    private lateinit var binding: FragmentShareLocationBinding
     private var mGoogleMap: GoogleMap? = null
     private lateinit var appPermission: AppPermissions
     private lateinit var loadingDialog: LoadingDialog
@@ -116,155 +93,41 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
     private var userSavedLocaitonId: ArrayList<String> = ArrayList()
     private var infoWindowAdapter: InfoWindowAdapter? = null
     private lateinit var adapterStep: DirectionStepAdapter
-    private var endLat: Double? = 16.077558
-    private var endLng: Double? = 108.213324
-    val currentLocationStart = MutableLiveData<Location>()
-    val currentLocationEnd = MutableLiveData<LatLng>()
-    private lateinit var mMap: GoogleMap
-    var SPKyThuat = LatLng(16.077558, 108.213324)
-    var DHDuyTan = LatLng(16.077085, 108.211112)
-    private var locationArraylist: ArrayList<LatLng>?=null
-    val checkStatus = MutableLiveData<Boolean>(false)
-    var setdata=ArrayList<PostInfo?>()
-    var universityList = MutableLiveData<List<University>> ()
-    var userKhach = MutableLiveData<UserModel> ()
+    private var endLat: Double = 16.075558
+    private var endLng: Double = 108.212324
+    val currentLocationStart = MutableLiveData<ToaDo>()
+    val i = MutableLiveData<Int>(1)
+    val currentLocationEnd = MutableLiveData<ToaDo>()
+    var postId="0"
 
+//    var a = mGoogleMap?.addMarker(MarkerOptions().position(LatLng(endLat,endLng)).icon(getCustomIcon()).title(""))
+    private lateinit var mMap: GoogleMap
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        locationViewModel.createStar()
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+
+        binding = FragmentShareLocationBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    @SuppressLint("SuspiciousIndentation")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var itemName = listOf("Khac")
 
-        var autoComplete : AutoCompleteTextView =binding.autoSlect
-
-
-        val item = listOf("DH Su Pham Ky Thuat","DH Duy Tan(CS1)","DH Kinh Te","Another place")
-        var adapter = ArrayAdapter(requireContext() ,R.layout.list_item_school,itemName)
-
-        val database = Firebase.database.getReference("University")
-            database.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    Log.d(TAG,"kiem tra onDataChange University  : "+snapshot.value)
-                try {
-
-                    var  userPlaces : List<University> = snapshot.children.map { dataSnapshot ->
-
-                        dataSnapshot.getValue(University::class.java)!!
-
-                    }
-
-                    universityList.value=  userPlaces
-                    for(i in userPlaces ){
-                        itemName =itemName + listOf(i.name)
-                    }
-                    Log.d(TAG,"kiem tra University : "+userPlaces)
-                    Log.d(TAG,"kiem tra name University : "+itemName)
-                    adapter = ArrayAdapter(requireContext() ,R.layout.list_item_school,itemName)
-                    autoComplete.setAdapter(adapter)
-                }catch (e : Exception){
-
-                }
+        if(arguments?.getString("idPost") !=null){
+            postId= arguments?.getString("idPost")!!
+        }
 
 
-            }
+        i.value?.let { loop(it) }
 
-                override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-
-        })
 //        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Grap Share"
         viewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
-        locationArraylist= ArrayList()
-        locationArraylist!!.add(SPKyThuat)
-        locationArraylist!!.add(DHDuyTan )
         appPermission = AppPermissions()
         loadingDialog = LoadingDialog(requireActivity())
         firebaseAuth = Firebase.auth
         googlePlaceList = ArrayList()
         adapterStep = DirectionStepAdapter()
-
-
-
-        if(binding.textTime.text.length!=0){
-            viewModel.getFillPostWithUnversity(binding.textTime.text.toString())
-
-        }
-
-        binding.btnTime.setOnClickListener {
-            val datePickerFragment = DatePickerFragment()
-            val supportFragmentManager = requireActivity().supportFragmentManager
-
-            // we have to implement setFragmentResultListener
-            supportFragmentManager.setFragmentResultListener(
-                "REQUEST_KEY",
-                viewLifecycleOwner
-            ) { resultKey, bundle ->
-                if (resultKey == "REQUEST_KEY") {
-                    val date = bundle.getString("SELECTED_DATE")
-                    binding.btnTime.text=date.toString()
-                    binding.textTime.text=date.toString()
-                    viewModel.getFillPostWithUnversity(date.toString())
-//                    post.value?.timeStart=date.toString()
-                }
-            }
-            // show
-            datePickerFragment.show(supportFragmentManager, "DatePickerFragment")
-        }
-
-
-
-        autoComplete.onItemClickListener= AdapterView.OnItemClickListener { adapterView, view, i, l ->
-            mMap.clear()
-            if(adapterView.getItemAtPosition(i).toString().equals("DH Su Pham Ky Thuat")){
-
-                var td=LatLng(16.078179,108.212011)
-                currentLocationEnd.value  =td
-
-                Log.d(TAG,"kiem tra vi tri currentLocationEnd:"+currentLocationEnd.value.toString())
-
-                mMap.addMarker(MarkerOptions().position(td).icon(BitmapDescriptorFactory
-                    .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)).title("info.postId"))
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f))
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(td))
-            }
-
-            if(adapterView.getItemAtPosition(i).toString().equals("DH Kinh Te")){
-
-                var td=LatLng(16.047588, 108.239288)
-                currentLocationEnd.value  =td
-
-                Log.d(TAG,"kiem tra vi tri currentLocationEnd:"+currentLocationEnd.value.toString())
-
-                mMap.addMarker(MarkerOptions().position(td).icon(BitmapDescriptorFactory
-                    .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)).title("info.postId"))
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f))
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(td))
-            }
-            if(adapterView.getItemAtPosition(i).toString().equals("Khac")){
-                val fragment: Fragment = PostNotherPlaceFragment()
-//                val bundle=Bundle()
-//                bundle.putString("idPost",it.title)
-//                fragment.arguments=bundle
-                val transaction = fragmentManager?.beginTransaction()
-                transaction?.replace(R.id.fragmentContainer,fragment)?.commit()
-                }
-//           var a= adapterView.getItemAtPosition(i).toString()
-            Log.d(TAG,"kiem tra data  autoComplete.onItemClickListener: "+adapterView.getItemAtPosition(i).toString())
-            viewModel.getPostWithUnversity(adapterView.getItemAtPosition(i).toString())
-
-        }
-
-
         permissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
                 isLocationPermissionOk =
@@ -272,31 +135,123 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
                             && permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
 
                 if (isLocationPermissionOk)
-                    //setUpGoogleMap()
+                    setUpGoogleMap()
                 else
-                    Snackbar.make(binding.root, "Quyền truy cập vị trí bị từ chối", Snackbar.LENGTH_LONG)
+                    Snackbar.make(binding.root, "Location permission denied", Snackbar.LENGTH_LONG)
                         .show()
 
             }
+        setUpGoogleMap()
+        var userList = MutableLiveData<ToaDo> ()
 
+        val database = Firebase.database.getReference("FollowTaiXe").child(postId.toString())
+        var a : Marker? =null
+        database.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+//                val post = snapshot.getValue(ToaDo::class.java)
+//                Log.d(TAG,"kiem tra FollowLocationTaiXe : "+post)
+                try {
+
+                    var  userPlaces : List<ToaDo> = snapshot.children.map { dataSnapshot ->
+
+                        dataSnapshot.getValue(ToaDo::class.java)!!
+
+                    }
+                    userList.value=userPlaces[0]
+
+//                    mGoogleMap?.addMarker(MarkerOptions().position( LatLng(userPlaces[0].latitude,userPlaces[0].longitude)).icon(getCustomIcon()).title(""))
+//                    TrackingLocationTaxi(LatLng(userPlaces[0].latitude,userPlaces[0].longitude))
+
+                    if(a==null &&currentLocationStart.value!=null) {
+                        a = mMap?.addMarker(
+                            MarkerOptions().position(LatLng(currentLocationStart.value!!.latitude, currentLocationStart.value!!.longitude)).icon(getCustomIcon())
+                                .title("")
+                        )
+                    }
+                    else{
+                        a!!.position=LatLng(userPlaces[0].latitude,userPlaces[0].longitude)
+                    }
+                        Log.d(TAG,"kiem tra FollowLocationTaiXe : "+ userList.value)
+
+                }catch (e : Exception){
+
+                }
+
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+
+        })
+
+        val databaseStatus = Firebase.database.getReference("CheckFollow")
+        databaseStatus.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                try {
+
+                    var  userPlaces : List<StatusID> = snapshot.children.map { dataSnapshot ->
+                        dataSnapshot.getValue(StatusID::class.java)!!
+                    }
+                    for(item in userPlaces){
+                        if(item.id==postId){
+                            if(item.status=="0"){
+                                Log.d(TAG,"Chuyến đi bị hủy: ")
+                                val showDialog = DialogHuy("Chuyến đi bị hủy")
+                                showDialog.show((activity as AppCompatActivity).supportFragmentManager, "Yêu cầu")
+                                i.value=2
+                                CoroutineScope(IO).launch {
+                                    delay(5000)
+                                    CoroutineScope(IO).launch {
+                                        val fragment: Fragment = HomeFragment()
+                                        val transaction = fragmentManager?.beginTransaction()
+                                        transaction?.replace(R.id.fragmentContainer,fragment)?.commit()
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+//                    mGoogleMap?.addMarker(MarkerOptions().position( LatLng(userPlaces[0].latitude,userPlaces[0].longitude)).icon(getCustomIcon()).title(""))
+//                    TrackingLocationTaxi(LatLng(userPlaces[0].latitude,userPlaces[0].longitude))
+
+                }catch (e : Exception){
+
+                }
+
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+
+        })
         val mapFragment =
             (childFragmentManager.findFragmentById(R.id.homeMap) as SupportMapFragment?)
         mapFragment?.getMapAsync(this)
 
-//
-//        for (placeModel in AppConstant.placesName) {
-//            val chip = Chip(requireContext())
-//            chip.text = placeModel.name
-//            chip.id = placeModel.id
-//            chip.setPadding(8, 8, 8, 8)
-//            chip.setTextColor(resources.getColor(R.color.white, null))
-//            chip.chipBackgroundColor = resources.getColorStateList(R.color.primaryColor, null)
-//            chip.chipIcon = ResourcesCompat.getDrawable(resources, placeModel.drawableId, null)
-//            chip.isCheckable = true
-//            chip.isCheckedIconVisible = false
-//            binding.placesGroup.addView(chip)
-//        }
 
+//        lifecycleScope.launchWhenStarted {
+//            locationViewModel.FollowLocationTaiXe("4").collect {
+//                when (it) {
+//                    is State.Loading -> {
+//
+//                    }
+//                    is State.Success -> {
+//                        var td=it.data as ToaDo
+//                        TrackingLocationTaxi(LatLng(td.latitude,td.longitude))
+//                    }
+//                    is State.Failed -> {
+//
+//                    }
+//                }
+//            }
+//        }
 
         binding.enableTraffic.setOnClickListener {
 
@@ -312,9 +267,36 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
                 }
             }
         }
+        binding.huy.setOnClickListener {
+            val showDialog = DialogHuy("Nếu hủy số sao của bạn sẽ bị trừ")
+            showDialog.show((activity as AppCompatActivity).supportFragmentManager, "Yêu cầu")
+        }
+        binding.btnStart.setOnClickListener {
 
+            databaseStatus.child(postId).setValue(StatusID(postId,"2"))
+            binding.btnStart.setBackgroundColor(Color.YELLOW)
+            binding.btnStart.setTextColor(Color.BLACK)
+        }
+        binding.btndatoi.setOnClickListener {
 
-        binding.currentLocation.setOnClickListener { getCurrentLocation() }
+            databaseStatus.child(postId).setValue(StatusID(postId,"3"))
+            binding.btndatoi.setBackgroundColor(Color.YELLOW)
+            binding.btndatoi.setTextColor(Color.BLACK)
+        }
+        binding.btnTime.setOnClickListener {
+
+            databaseStatus.child(postId).setValue(StatusID(postId,"5"))
+            binding.btnTime.setBackgroundColor(Color.YELLOW)
+            binding.btnTime.setTextColor(Color.BLACK)
+        }
+
+        binding.currentLocation.setOnClickListener {
+           getCurrentLocation()
+            getCurrentLocationtoShare()
+           getDirection("walking")
+//            TrackingLocationTaxi()
+
+        }
 
         binding.btnMapType.setOnClickListener {
             val popupMenu = PopupMenu(requireContext(), it)
@@ -336,58 +318,34 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
         }
 
 
-        binding.drawLine.setOnClickListener {
-            checkStatus.value=!checkStatus.value!!
-            if(checkStatus.value ==true){
-                binding.inflayourUser.isVisible=true
-                binding.drawLine.setImageResource(R.drawable.ic_close)
-            }
-            else {
-                binding.inflayourUser.isVisible=false
-                binding.drawLine.setImageResource(R.drawable.ic_riseoutlined)
+//        binding.drawLine.setOnClickListener {
 //            Log.d(TAG,"kiem tra drawLine.setOnClickListener: "+it)
-                ////            getDirection("bicycling")
+////            getDirection("bicycling")
 //            getDirection("walking")
-            }
-        }
+//        }
+
         binding.placesGroup.setOnCheckedChangeListener { _, checkedId ->
 
-//            if (checkedId != -1) {
-//                val placeModel = AppConstant.placesName[checkedId - 1]
-//                binding.edtPlaceName.setText(placeModel.name)
-//                getNearByPlace(placeModel.placeType)
-//            }
         }
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(1000)
-            viewModel.allUsers.observe(viewLifecycleOwner, Observer {
-                Log.d(TAG,"kiem tra data HomeFragent allUsers: "+it)
-                if(it.isNotEmpty()){
+        viewModel.allUsers.observe(viewLifecycleOwner, Observer {
+            Log.d(TAG,"kiem tra data HomeFragent allUsers: "+it)
+            if(it.toString().isNotEmpty()){
 
-                    for(item in it){
-                        if(item.status!="2"&& item.status!="3"){
-                            Log.d(TAG,"kiem tra data HomeFragent itemLocation: "+item)
-                            var info:Post=item
-                            var td=LatLng(info.lat,info.lng)
-                            Log.d(TAG,"thong tin location university TTTT: "+info)
-                            mMap.addMarker(MarkerOptions().position(td).title(info.postId))
-                            mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f))
-                            mMap.moveCamera(CameraUpdateFactory.newLatLng(td))
-                        }
+                for(item in it){
+                    if(item.postId==postId) {
+                        var info: Post = item
+                        var td = LatLng(info.lat, info.lng)
+                        currentLocationEnd.value= ToaDo(td.latitude,td.longitude)
+                        Log.d(TAG, "thong tin location university TTTT: " + info)
+                        mMap.addMarker(MarkerOptions().position(td).title(info.postId))
+                        mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f))
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(td))
                     }
                 }
-                else {
-                    Log.d(TAG, "kiem tra data HomeFragent itemLocation null: ")
-                    mMap.clear()
-                }
+            }
 
 
-            })
-        }
-
-
-        setUpRecyclerView()
-
+        })
         lifecycleScope.launchWhenStarted {
             userSavedLocaitonId = locationViewModel.getUserLocationId()
             Log.d("TAG", "onViewCreated: ${userSavedLocaitonId.size}")
@@ -398,128 +356,27 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
 
         mGoogleMap = googleMap
         mMap=googleMap
-        val data = MutableLiveData<List<PostInfo>>()
-        val dataItem = MutableLiveData<PostInfo>()
-//        for (i in locationArraylist!!.indices){
-//            mMap.addMarker(MarkerOptions().position(locationArraylist!![i]).title("spkt"))
-//            mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f))
-//            mMap.moveCamera(CameraUpdateFactory.newLatLng(locationArraylist!![i]))
-//
-//        }
+
         viewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
-
-//        viewModel.allUsers.observe(viewLifecycleOwner, Observer {
-//            Log.d(TAG,"kiem tra data HomeFragent allUsers: "+it)
-//            if(it.toString().isNotEmpty()){
-//
-//                for(item in it){
-//                    var info:Post=item
-//                    var td=LatLng(info.lat,info.lng)
-//                    Log.d(TAG,"thong tin location university TTTT: "+info)
-//                    mMap.addMarker(MarkerOptions().position(td).title(info.postId))
-//                    mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f))
-//                    mMap.moveCamera(CameraUpdateFactory.newLatLng(td))
-//
-////                    dataItem.value?.post =item
-////                    dataItem.value?.locale= LatLng(dataItem.value!!.post?.lat,dataItem.value!!.post?.lng)
-////                    Log.d(TAG,"thong tin location university dataItem: "+dataItem.value)
-////                    if(dataItem.value.toString().isNotEmpty()) {
-////                        setdata.add(dataItem.value)
-//////                        Log.d(TAG,"thong tin location university dataItem: "+dataItem.value)
-////                    }
-//                }
-//            }
-////            if(setdata.size!=0){
-////                for (i in  setdata){
-////                    var item= i?.locale
-////                    Log.d(TAG,"thong tin location university setdata: "+item.toString())
-////                    Log.d(TAG,"thong tin location size: "+setdata)
-////                    if(item!= null) {
-////                        mMap.addMarker(MarkerOptions().position(item).title("thongso"))
-////                        mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f))
-////                        mMap.moveCamera(CameraUpdateFactory.newLatLng(item))
-////                    }
-////                }
+//        mMap.setOnMarkerClickListener {
+//            //  Take some action here
+//            viewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
+//            it.title
+//            Log.d(TAG,"kiem tra gia tri it.title: "+it.title)
+//            viewModel.setidPost(it.title)
+////            view?.let { it1 ->
+////                Navigation.findNavController(it1)
+////                    .navigate(R.id.action_btnHome_to_checkInfo)
 ////            }
-//
-//
-//        })
-//        for (i in  setdata){
-//            var item= i?.locale
-//            Log.d(TAG,"thong tin location university setdata"+item)
-//            mMap.addMarker(MarkerOptions().position(item).title("thongso"))
-//            mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f))
-//            mMap.moveCamera(CameraUpdateFactory.newLatLng(item))
-//
+////            val fragment: Fragment = CheckInfoFragment()
+////            val bundle=Bundle()
+////            bundle.putString("idPost",it.title)
+////            fragment.arguments=bundle
+////            val transaction = fragmentManager?.beginTransaction()
+////            transaction?.replace(R.id.fragmentContainer,fragment)?.commit()
+//            true
 //        }
-        mMap.setOnMarkerClickListener {
-            viewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
-            if(checkStatus.value == true){
-                val databasUser = Firebase.database.getReference("Users")
-                getDirection("walking")
-                viewModel.getPostWithUnversityAndIDcheck(it.title)
-                viewModel.post.observe(viewLifecycleOwner, Observer {
-                    if(it.toString().isNotEmpty()){
-                        var gmail=it[0].gmail
-                        databasUser.addValueEventListener(object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                Log.d(TAG,"kiem tra onDataChange user  : "+snapshot.value)
-                                try {
-
-                                    var  userPlaces : List<UserModel> = snapshot.children.map { dataSnapshot ->
-
-                                        dataSnapshot.getValue(UserModel::class.java)!!
-                                    }
-                                    for(i in userPlaces){
-                                        if(i.email==gmail+"@gmail.com"){
-                                            Log.d(TAG,"kiem tra onDataChange user  : "+i)
-                                            binding.txtPlaceName.text= i.username
-                                            Glide.with(requireContext()).load(i.image)
-                                                .into(binding.image)
-                                        }
-                                    }
-
-                                }catch (e : Exception){
-
-                                }
-
-
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {
-                                TODO("Not yet implemented")
-                            }
-
-
-                        })
-                    }
-                })
-
-
-
-
-
-            }
-            else {
-                //  Take some action here
-                viewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
-                it.title
-                Log.d(TAG, "kiem tra gia tri it.title: " + it.title)
-                viewModel.setidPost(it.title)
-//            view?.let { it1 ->
-//                Navigation.findNavController(it1)
-//                    .navigate(R.id.action_btnHome_to_checkInfo)
-//            }
-                val fragment: Fragment = CheckInfoFragment()
-                val bundle = Bundle()
-                bundle.putString("idPost", it.title)
-                fragment.arguments = bundle
-                val transaction = fragmentManager?.beginTransaction()
-                transaction?.replace(R.id.fragmentContainer, fragment)?.commit()
-            }
-            true
-        }
-
+//        getCurrentLocationtoShare()
 
         when {
             ActivityCompat.checkSelfPermission(
@@ -555,6 +412,27 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
         permissionToRequest.add(android.Manifest.permission.ACCESS_COARSE_LOCATION)
 
         permissionLauncher.launch(permissionToRequest.toTypedArray())
+    }
+    private fun TrackingLocationTaxi(td:LatLng){
+        if(currentLocationStart.value!=null) {
+//        var td=LatLng(currentLocationStart.value!!.latitude,currentLocationStart.value!!.longitude)
+//            mGoogleMap?.clear()
+
+
+        }
+
+//        }
+    }
+    fun loop(i:Int) {
+        if(i==1) {
+            CoroutineScope(IO).launch {
+                delay(500)
+                CoroutineScope(Main).launch {
+                    getCurrentLocationtoShare()
+                    loop(i)
+                }
+            }
+        }
     }
 
     private fun setUpGoogleMap() {
@@ -616,7 +494,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
             Looper.getMainLooper()
         )?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Toast.makeText(requireContext(), "Location update start", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Vị trí được cập nhật", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -641,13 +519,44 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
         fusedLocationProviderClient.lastLocation.addOnSuccessListener {
 
             currentLocation = it
-            currentLocationStart.value=it
             infoWindowAdapter = null
+            currentLocationStart.value=ToaDo(it.latitude,it.longitude)
             infoWindowAdapter = InfoWindowAdapter(currentLocation, requireContext())
             mGoogleMap?.setInfoWindowAdapter(infoWindowAdapter)
             moveCameraToLocation(currentLocation)
         }.addOnFailureListener {
             Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun getCurrentLocationtoShare() {
+        val context = context
+        if(context!=null) {
+            val fusedLocationProviderClient =
+                LocationServices.getFusedLocationProviderClient(requireContext())
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                isLocationPermissionOk = false
+                return
+            }
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener {
+
+                locationViewModel.createFollowTaiXe(postId, ToaDo(it.latitude, it.longitude))
+                Log.d(TAG, "kiem tra  co lay idPost hay khong " + arguments?.getString("idPost")!!)
+
+
+//            infoWindowAdapter = InfoWindowAdapter(currentLocation, requireContext())
+//            mGoogleMap?.setInfoWindowAdapter(infoWindowAdapter)
+//            moveCameraToLocation(currentLocation)
+            }.addOnFailureListener {
+                Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -657,7 +566,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
             LatLng(
                 location.latitude,
                 location.longitude
-            ), 16f
+            ), 17f
         )
 
         val markerOption = MarkerOptions()
@@ -691,94 +600,22 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
         }
     }
 
-
-    private fun getNearByPlace(placeType: String) {
-        val url = ("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="
-                + currentLocation.latitude + "," + currentLocation.longitude
-                + "&radius=" + radius + "&type=" + placeType + "&key=" +
-                resources.getString(R.string.API_KEY))
-
-        lifecycleScope.launchWhenStarted {
-            locationViewModel.getNearByPlace(url).collect {
-                when (it) {
-                    is State.Loading -> {
-                        if (it.flag == true) {
-                            loadingDialog.startLoading()
-                        }
-                    }
-
-                    is State.Success -> {
-                        loadingDialog.stopLoading()
-                        val googleResponseModel: GoogleResponseModel =
-                            it.data as GoogleResponseModel
-
-                        if (googleResponseModel.googlePlaceModelList !== null &&
-                            googleResponseModel.googlePlaceModelList.isNotEmpty()
-                        ) {
-                            googlePlaceList.clear()
-                            mGoogleMap?.clear()
-
-                            for (i in googleResponseModel.googlePlaceModelList.indices) {
-
-                                googleResponseModel.googlePlaceModelList[i].saved =
-                                    userSavedLocaitonId.contains(googleResponseModel.googlePlaceModelList[i].placeId)
-                                googlePlaceList.add(googleResponseModel.googlePlaceModelList[i])
-                                addMarker(googleResponseModel.googlePlaceModelList[i], i)
-                            }
-                            googlePlaceAdapter.setGooglePlaces(googlePlaceList)
-                        } else {
-                            mGoogleMap?.clear()
-                            googlePlaceList.clear()
-
-                        }
-
-                    }
-                    is State.Failed -> {
-                        loadingDialog.stopLoading()
-                        Snackbar.make(
-                            binding.root, it.error,
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
-        }
-    }
     private fun clearUI() {
         mMap?.clear()
 
     }
-    fun Distance(location: Location,marker: Marker){
-        val distance = SphericalUtil.computeDistanceBetween(
-            LatLng(
-                location.latitude, location.longitude
-            ), marker.position
-        )
-        Log.d(TAG,"kiem tra vi tri: "+currentLocationEnd.value)
-        if (distance.roundToInt() > 1000) {
-            val kilometers = (distance / 1000.0)
-            binding.txtKhoanCach.text = "$kilometers KM"
-        } else {
-            binding.txtKhoanCach.text = "${distance.roundToLong()} Meters"
-
-        }
-    }
     private fun getDirection(mode: String) {
-        var startLocationLat:Double=currentLocationStart.value!!.latitude
-        var startLocationLag:Double=currentLocationStart.value!!.longitude
-        Log.d(TAG,"kiem tra vi tri: "+currentLocationEnd.value)
-        Log.d(TAG,"kiem tra vi tri start: "+startLocationLat+"=>"+startLocationLag)
 
-
-        if (isLocationPermissionOk) {
+//        clearUI()
+        if (isLocationPermissionOk && currentLocationStart.value!=null) {
 //            val url = "https://maps.googleapis.com/maps/api/directions/json?" +
 //                    "origin=" + currentLocation.latitude + "," + currentLocation.longitude +
 //                    "&destination=" + endLat + "," + endLng +
 //                    "&mode=" + mode +
 //                    "&key=" + resources.getString(R.string.API_KEY)
             val url = "https://maps.googleapis.com/maps/api/directions/json?" +
-                    "origin=" + startLocationLat + "," + startLocationLag +
-                    "&destination=" + currentLocationEnd.value?.latitude + "," + currentLocationEnd.value?.longitude +
+                    "origin=" + currentLocationEnd.value!!.latitude + "," + currentLocationEnd.value!! +
+                    "&destination=" + currentLocation.latitude + "," + currentLocation.longitude +
                     "&mode=" + mode +
                     "&key=" + resources.getString(R.string.API_KEY)
 
@@ -794,6 +631,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
                         is State.Success -> {
                             loadingDialog.stopLoading()
 //                            clearUI()
+
                             val directionResponseModel: DirectionResponseModel =
                                 it.data as DirectionResponseModel
                             Log.d(TAG,"kiem tra line tra ve: "+it.data.toString())
@@ -801,13 +639,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
                                 directionResponseModel.directionRouteModels!![0]
 
                             val legModel: DirectionLegModel = routeModel.legs?.get(0)!!
-                            Log.d(TAG,"kiem tra thoi gian legModel: "+legModel.distance?.text+ legModel.duration?.text)
-                            binding.txtKhoanCach.text=legModel.distance?.text
-                            binding.txttime.text=legModel.duration?.text
 
                             adapterStep.setDirectionStepModels(legModel.steps!!)
-                            val (distance, duration, _, htmlInstructions) = legModel.steps!![0]
-                                Log.d(TAG,"kiem tra thoi gian: "+distance+duration)
+
                             val stepList: MutableList<LatLng> = ArrayList()
 
                             val options = PolylineOptions().apply {
@@ -859,17 +693,17 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
                                 legModel.endLocation.lng!!
                             )
 
-//                            mMap?.addMarker(
-//                                MarkerOptions()
-//                                    .position(endLocation)
-//                                    .title("End Location")
-//                            )
+                            mMap?.addMarker(
+                                MarkerOptions()
+                                    .position(endLocation)
+                                    .title("End Location")
+                            )
 
-//                            mMap?.addMarker(
-//                                MarkerOptions()
-//                                    .position(startLocation)
-//                                    .title("Start Location")
-//                            )
+                            mMap?.addMarker(
+                                MarkerOptions()
+                                    .position(startLocation)
+                                    .title("Start Location")
+                            )
 
                             val builder = LatLngBounds.builder()
                             builder.include(endLocation).include(startLocation)
@@ -885,6 +719,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
 
                         }
                         is State.Failed -> {
+
+                            Log.d(TAG,"check loi API: "+it.error)
                             loadingDialog.stopLoading()
                             Snackbar.make(
                                 binding.root, it.error,
@@ -896,6 +732,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
             }
         }
     }
+
 
     private fun addMarker(googlePlaceModel: GooglePlaceModel, position: Int) {
         val markerOptions = MarkerOptions()
@@ -915,8 +752,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
 
     private fun getCustomIcon(): BitmapDescriptor {
 
-        val background = ContextCompat.getDrawable(requireContext(), R.drawable.ic_location)
-        background?.setTint(resources.getColor(R.color.quantum_purple800, null))
+        val background = ContextCompat.getDrawable(requireContext(), R.drawable.icon_car)
+//        background?.setTint(resources.getColor(R.color.quantum_purple800, null))
         background?.setBounds(0, 0, background.intrinsicWidth, background.intrinsicHeight)
         val bitmap = Bitmap.createBitmap(
             background?.intrinsicWidth!!, background.intrinsicHeight,
@@ -928,39 +765,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
 
     }
 
-    private fun setUpRecyclerView() {
-        val snapHelper: SnapHelper = PagerSnapHelper()
-        googlePlaceAdapter = GooglePlaceAdapter(this)
 
-        binding.placesRecyclerView.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
-            setHasFixedSize(false)
-            adapter = googlePlaceAdapter
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-
-                    val linearManager = recyclerView.layoutManager as LinearLayoutManager
-                    val position = linearManager.findFirstCompletelyVisibleItemPosition()
-                    if (position > -1) {
-                        val googlePlaceModel: GooglePlaceModel = googlePlaceList[position]
-                        mGoogleMap?.animateCamera(
-                            CameraUpdateFactory.newLatLngZoom(
-                                LatLng(
-                                    googlePlaceModel.geometry?.location?.lat!!,
-                                    googlePlaceModel.geometry.location.lng!!
-                                ), 20f
-                            )
-                        )
-                    }
-                }
-            })
-        }
-
-        snapHelper.attachToRecyclerView(binding.placesRecyclerView)
-    }
 
     override fun onSaveClick(googlePlaceModel: GooglePlaceModel) {
         if (userSavedLocaitonId.contains(googlePlaceModel.placeId)) {
@@ -1071,10 +876,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-//        val markerTag = marker.tag as Int
-//        Log.d("TAG", "onMarkerClick: $markerTag")
+        val markerTag = marker.tag as Int
+        Log.d("TAG", "onMarkerClick: $markerTag")
 //        binding.placesRecyclerView.scrollToPosition(markerTag)
-        return false
+        return true
     }
     private fun decode(points: String): List<com.google.maps.model.LatLng> {
         val len = points.length

@@ -52,10 +52,17 @@ class MyRequestFragment : Fragment() {
         userRecyclerView.layoutManager = LinearLayoutManager(context)
         userRecyclerView.setHasFixedSize(true)
         adapterpost = MyRequestAdapter {
-            val fragment: Fragment = FollowTaiXeFragment()
-            val transaction = fragmentManager?.beginTransaction()
-            transaction?.replace(R.id.fragmentContainer,fragment)?.commit()
-
+//            val fragment: Fragment = FollowTaiXeFragment()
+//            val transaction = fragmentManager?.beginTransaction()
+//            transaction?.replace(R.id.fragmentContainer,fragment)?.commit()
+            if(it.status=="2") {
+                val fragment: Fragment = ShareLocationFragment()
+                val bundle = Bundle()
+                bundle.putString("idPost", it.postId)
+                fragment.arguments = bundle
+                val transaction = fragmentManager?.beginTransaction()
+                transaction?.replace(R.id.fragmentContainer, fragment)?.commit()
+            }
         }
 //            locationViewModel .setpost(it)
 //            it.let {

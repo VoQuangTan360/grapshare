@@ -173,52 +173,6 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="16dp"
-        android:text="Số điện thoại"
-        android:textColor="@color/teal_700"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:paddingStart="60dp"
-        >
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnChooseOneDay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="10dp"
-            android:text="only to day"
-            android:layout_marginHorizontal="15dp"
-            android:textColor="@color/textColor"
-            android:background="@color/itemTextColor"></androidx.appcompat.widget.AppCompatButton>
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnChooseMoreDay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
-            android:paddingHorizontal="10dp"
-            android:visibility="invisible"
-            android:text="only to day"
-            android:layout_marginHorizontal="15dp"
-            android:textColor="@color/Daryellow"
-            android:background="@color/itemTextColor"></androidx.appcompat.widget.AppCompatButton>
-        <TextView
-            android:id="@+id/textTimeEnd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="70dp"
-            android:textColor="@color/accentColor"
-            android:textStyle="bold"
-            android:textSize="23sp"/>
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
         android:text="Mô tả thêm"
         android:textColor="@color/teal_700"
         android:textSize="18sp"

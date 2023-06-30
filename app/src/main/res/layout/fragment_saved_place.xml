@@ -6,6 +6,7 @@
     tools:context=".fragment.SavedPlaceFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+
         android:id="@+id/savedRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="35dp"
@@ -23,7 +24,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="17dp"
-        android:text="tạo bài đăng >>"
+        android:text="tạo bài đăng>>"
         android:textColor="@color/teal_700"
         android:textSize="16sp"
         android:textStyle="italic" />
@@ -37,10 +38,11 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="17dp"
         android:layout_marginTop="24dp"
-        android:text="Post another"
+        android:text="Bài đăng khác"
         android:textColor="@color/teal_700"
         android:textSize="16sp"
         android:textStyle="italic" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

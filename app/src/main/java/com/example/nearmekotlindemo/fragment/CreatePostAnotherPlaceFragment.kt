@@ -82,7 +82,7 @@ class CreatePostAnotherPlaceFragment : Fragment() {
                 post.value?.ward=adapterView.getItemAtPosition(i).toString()
             }
 
-        val itemXe = listOf("Car","Motorcycle","Bicycle")
+        val itemXe = listOf("ô tô","xe máy","xe đạp")
         val adapterXe = ArrayAdapter(requireContext() ,R.layout.list_item_xe,itemXe)
         val autoCompleteXe : AutoCompleteTextView =binding.autoSlectTranaport
         autoCompleteXe.setAdapter(adapterXe)

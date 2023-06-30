@@ -40,6 +40,7 @@ class SavedPlaceFragment : Fragment(), SaveLocationInterface {
     private val locationViewModel: LocationViewModel by viewModels()
     private lateinit var loadingDialog: LoadingDialog
 
+
     private lateinit var savedPlaceModelList: ArrayList<SavedPlaceModel>
     private lateinit var placeAdapter: SavedPlaceAdapter
 
@@ -71,6 +72,7 @@ class SavedPlaceFragment : Fragment(), SaveLocationInterface {
 
 
         val model1 = ViewModelProvider(requireActivity()).get(PostViewModel::class.java)
+        model1.getMyPostWithUnversity()
         model1.statusPickDialog.observe(viewLifecycleOwner, Observer {
             if(it.length==1){
                 Navigation.findNavController(view)
@@ -84,11 +86,29 @@ class SavedPlaceFragment : Fragment(), SaveLocationInterface {
         userRecyclerView = view.findViewById(R.id.recyclerView)
         userRecyclerView.layoutManager = LinearLayoutManager(context)
         userRecyclerView.setHasFixedSize(true)
-        adapterpost = MyPostAdapter { model1.setidPost(it) }
+        adapterpost = MyPostAdapter { model1.setidPost(it)
+            if(it.status=="0"){
+                val showDialog=DialogRequestChooseMyPost(it.id)
+                    showDialog.show((activity as AppCompatActivity).supportFragmentManager, "Yêu cầu")
+            }
+
+        }
         userRecyclerView.adapter = adapterpost
 
-        viewModel = ViewModelProvider(this).get(PostViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(PostViewModel::class.java)
 
+        viewModel.statustChooseChane.observe(viewLifecycleOwner, Observer {
+            Log.d(TAG,"kiem tra statust ChooseChane.observe: "+it)
+            if(it.status=="1"){
+                Log.d(TAG,"kiem tra statust ChooseChane.observe: "+it)
+                val fragment: Fragment = UpdatePostFragment()
+                val bundle = Bundle()
+                bundle.putString("idPost", it.id)
+                fragment.arguments = bundle
+                val transaction = fragmentManager?.beginTransaction()
+                transaction?.replace(R.id.fragmentContainer, fragment)?.commit()
+            }
+        })
         viewModel.allUsers.observe(viewLifecycleOwner, Observer {
 
             adapterpost.updateUserList(it)
@@ -112,7 +132,7 @@ class SavedPlaceFragment : Fragment(), SaveLocationInterface {
 //            val transaction = fragmentManager?.beginTransaction()
 //            transaction?.replace(R.id.fragmentContainer,fragment)?.commit()
         }
-        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Go University"
+//        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Go University"
         binding.savedRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(false)

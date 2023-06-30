@@ -100,7 +100,7 @@
     </fragment>
     <fragment
         android:id="@+id/infoMyPostFragment"
-        android:name="com.example.nearmekotlindemo.fragment.InfoMyPostFragment"
+        android:name="com.example.nearmekotlindemo.fragment.ChooseTaiXeMyPostFragment"
         android:label="fragment_info_my_post"
         tools:layout="@layout/fragment_info_my_post" >
         <action

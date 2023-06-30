@@ -4,20 +4,21 @@
         <item
             android:id="@+id/btnHome"
             android:icon="@drawable/ic_home"
-            android:title="Home" />
+            android:title="Trang Chủ" />
         <item
             android:id="@+id/btnSavedPlaces"
             android:icon="@drawable/ic_location"
-            android:title="Post" />
+            android:title="Bài Đăng"
+            />
         <item
             android:id="@+id/btnPostINeed"
             android:icon="@drawable/amu_bubble_mask"
-            android:title="Request"
+            android:title="Yêu cầu"
             />
         <item
             android:id="@+id/btnSetting"
             android:icon="@drawable/ic_setting"
-            android:title="Settings" />
+            android:title="Cài Đăt" />
 
     </group>
 

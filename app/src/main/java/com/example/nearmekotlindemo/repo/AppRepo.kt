@@ -7,6 +7,7 @@ import android.provider.SyncStateContract
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import com.bumptech.glide.Glide
 import com.example.nearmekotlindemo.Post
 import com.example.nearmekotlindemo.SavedPlaceModel
 import com.example.nearmekotlindemo.UserModel
@@ -14,6 +15,7 @@ import com.example.nearmekotlindemo.constant.AppConstant
 import com.example.nearmekotlindemo.models.googlePlaceModel.GooglePlaceModel
 import com.example.nearmekotlindemo.models.googlePlaceModel.Mess
 import com.example.nearmekotlindemo.models.googlePlaceModel.PostType2
+import com.example.nearmekotlindemo.models.googlePlaceModel.Star
 import com.example.nearmekotlindemo.models.googlePlaceModel.StatusID
 import com.example.nearmekotlindemo.models.googlePlaceModel.ToaDo
 import com.example.nearmekotlindemo.network.RetrofitClient
@@ -54,10 +56,10 @@ class AppRepo {
         val data = auth.signInWithEmailAndPassword(email, password).await()
         data?.let {
             if (auth.currentUser?.isEmailVerified!!) {
-                emit(State.success("Login Successfully"))
+                emit(State.success("Đăng nhập thành công"))
             } else {
                 auth.currentUser?.sendEmailVerification()?.await()
-                emit(State.failed("Verify email first"))
+                emit(State.failed("Hãy xác nhận email"))
             }
         }
     }.catch {
@@ -78,12 +80,12 @@ class AppRepo {
         data.user?.let {
             val path = uploadImage(it.uid, image).toString()
             val userModel = UserModel(
-                email, username, path
+                email, username, path,"1"
             )
 
             createUser(userModel, auth)
 
-            emit(State.success("Email verification sent"))
+            emit(State.success("link xác nhận đã được gửi tới gmail"))
 
         }
 
@@ -116,6 +118,31 @@ class AppRepo {
     fun createFollowTaiXe(postId:String,gps: ToaDo){
         val firebase = Firebase.database.getReference("FollowTaiXe")
         firebase.child(postId).child(postId).setValue(gps)
+    }
+    fun createStar(){
+
+        val auth = Firebase.auth
+        var gps= Star(auth.currentUser?.email)
+        var gmail=auth.currentUser?.email!!.replace("@gmail.com","")
+        val database = Firebase.database.getReference("Star").child(gmail)
+        database.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val star = snapshot.getValue(Star::class.java)
+                Log.d(TAG,"kiem tra Star : "+star)
+                if(star==null){
+                    val firebase = Firebase.database.getReference("Star")
+                    firebase.child(gmail).setValue(gps)
+                }
+
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+
+        })
     }
     fun FollowLocationTaiXe(postId: String): Flow<State<Any>> = flow<State<Any>> {
         emit(State.loading(true))
@@ -339,19 +366,20 @@ class AppRepo {
 //        emit(State.loading(true))
         val auth = Firebase.auth.currentUser?.email
         var gmail=auth.toString().replace("@gmail.com","")
+        mess.gmail=gmail
         val db = Firebase.firestore
-            val messItem = hashMapOf(
-                "time" to mess.time,
-                "postId" to mess.postId,
-                "gmail" to gmail ,
-                "start" to mess.start,
-                "phone" to mess.phone,
-                "end" to mess.end,
-                "status" to mess.status,
-                "id" to ""
-            )
+//            val messItem = hashMapOf(
+//                "time" to mess.time,
+//                "postId" to mess.postId,
+//                "gmail" to gmail ,
+//                "start" to mess.start,
+//                "mess" to mess.phone,
+//                "end" to mess.end,
+//                "status" to mess.status,
+//                "id" to ""
+//            )
             db.collection("Request")
-                .add(messItem)
+                .add(mess)
                 .addOnSuccessListener { documentReference ->
                     db.collection("Request").document(documentReference.id)
                         .update("id",documentReference.id)
@@ -648,6 +676,7 @@ class AppRepo {
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
+                    Log.d(TAG, "xem co update postid khong"+id)
                     db.collection("PostWithUniversity").document(document.id)
                         .update("status",status)
                 }
@@ -737,6 +766,37 @@ class AppRepo {
                 }
 
         }
+    }
+    fun  getRequestStar(gmail: String,userList : MutableLiveData<Star>) {
+
+
+        val databasUser = Firebase.database.getReference("Star")
+            databasUser.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d(TAG,"kiem tra onDataChange Star  : "+snapshot.value)
+                try {
+
+                    var  userPlaces : List<Star> = snapshot.children.map { dataSnapshot ->
+
+                        dataSnapshot.getValue(Star::class.java)!!
+
+                    }
+                    for(i in userPlaces){
+                        if(i.gmail==gmail+"@gmail.com"){
+                            userList.value=i
+                        }
+                    }
+                }catch (e : Exception){
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+
+        })
+
     }
     @SuppressLint("SuspiciousIndentation")
     fun  getMyRequestWithID(userList : MutableLiveData<List<Mess>>) {

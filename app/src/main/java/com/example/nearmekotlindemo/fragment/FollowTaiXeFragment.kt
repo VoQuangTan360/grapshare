@@ -21,8 +21,10 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
@@ -38,6 +40,7 @@ import com.example.nearmekotlindemo.databinding.FragmentFollowTaixeBinding
 import com.example.nearmekotlindemo.interfaces.NearLocationInterface
 import com.example.nearmekotlindemo.models.googlePlaceModel.GooglePlaceModel
 import com.example.nearmekotlindemo.models.googlePlaceModel.GoogleResponseModel
+import com.example.nearmekotlindemo.models.googlePlaceModel.StatusID
 import com.example.nearmekotlindemo.models.googlePlaceModel.ToaDo
 import com.example.nearmekotlindemo.models.googlePlaceModel.directionPlaceModel.DirectionLegModel
 import com.example.nearmekotlindemo.models.googlePlaceModel.directionPlaceModel.DirectionResponseModel
@@ -61,10 +64,14 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 
-class FollowTaiXeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
+    class FollowTaiXeFragment : Fragment(), OnMapReadyCallback, NearLocationInterface,
     GoogleMap.OnMarkerClickListener {
     private lateinit var binding: FragmentFollowTaixeBinding
     private var mGoogleMap: GoogleMap? = null
@@ -91,8 +98,9 @@ class FollowTaiXeFragment : Fragment(), OnMapReadyCallback, NearLocationInterfac
     private var endLat: Double = 16.075558
     private var endLng: Double = 108.212324
     val currentLocationStart = MutableLiveData<ToaDo>()
-    val currentLocationEnd = MutableLiveData<Location>()
-
+    val currentLocationEnd = MutableLiveData<ToaDo>()
+        var postId="0"
+        var gmail=""
 //    var a = mGoogleMap?.addMarker(MarkerOptions().position(LatLng(endLat,endLng)).icon(getCustomIcon()).title(""))
     private lateinit var mMap: GoogleMap
     override fun onCreateView(
@@ -101,7 +109,6 @@ class FollowTaiXeFragment : Fragment(), OnMapReadyCallback, NearLocationInterfac
     ): View {
 
         getCurrentLocation()
-
         binding = FragmentFollowTaixeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -110,7 +117,19 @@ class FollowTaiXeFragment : Fragment(), OnMapReadyCallback, NearLocationInterfac
         super.onViewCreated(view, savedInstanceState)
 
 //        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Grap Share"
-        viewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(LocationViewModel::class.java)
+
+        if(arguments?.getString("idPost") !=null){
+            postId= arguments?.getString("idPost")!!
+        }
+        if(arguments?.getString("gmail") !=null){
+
+            gmail= arguments?.getString("gmail")!!
+            viewModel.setRating(gmail)
+            Log.d("","kiem tra gmail FollowTaixe:"+gmail)
+        }
+
+
         appPermission = AppPermissions()
         loadingDialog = LoadingDialog(requireActivity())
         firebaseAuth = Firebase.auth
@@ -133,14 +152,14 @@ class FollowTaiXeFragment : Fragment(), OnMapReadyCallback, NearLocationInterfac
         var userList = MutableLiveData<ToaDo> ()
 
         val database =
-            Firebase.database.getReference("FollowTaiXe").child("4")
+            Firebase.database.getReference("FollowTaiXe").child(postId)
 //
         var a : Marker? =null
         database.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                val post = snapshot.getValue(ToaDo::class.java)
-                Log.d(TAG,"kiem tra FollowLocationTaiXe : "+post)
+//                val post = snapshot.getValue(ToaDo::class.java)
+//                Log.d(TAG,"kiem tra FollowLocationTaiXe : "+post)
                 try {
 
                     var  userPlaces : List<ToaDo> = snapshot.children.map { dataSnapshot ->
@@ -149,13 +168,14 @@ class FollowTaiXeFragment : Fragment(), OnMapReadyCallback, NearLocationInterfac
 
                     }
                     userList.value=userPlaces[0]
+                    currentLocationEnd.value=userPlaces[0]
 
 //                    mGoogleMap?.addMarker(MarkerOptions().position( LatLng(userPlaces[0].latitude,userPlaces[0].longitude)).icon(getCustomIcon()).title(""))
 //                    TrackingLocationTaxi(LatLng(userPlaces[0].latitude,userPlaces[0].longitude))
 
                     if(a==null) {
                         a = mMap?.addMarker(
-                            MarkerOptions().position(LatLng(endLat, endLng)).icon(getCustomIcon())
+                            MarkerOptions().position(LatLng(userPlaces[0].latitude,userPlaces[0].longitude)).icon(getCustomIcon())
                                 .title("")
                         )
                     }
@@ -178,7 +198,63 @@ class FollowTaiXeFragment : Fragment(), OnMapReadyCallback, NearLocationInterfac
 
         })
 
+        val databaseStatus = Firebase.database.getReference("CheckFollow")
+        databaseStatus.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                try {
 
+                    var  userPlaces : List<StatusID> = snapshot.children.map { dataSnapshot ->
+                        dataSnapshot.getValue(StatusID::class.java)!!
+                    }
+                    for(item in userPlaces){
+                        if(item.id==postId){
+                            if(item.status=="0"){
+                                Log.d(TAG,"     Chuyến đi bị hủy:     ")
+                                val showDialog = DialogHuy("Chuyến đi bị hủy")
+                                showDialog.show((activity as AppCompatActivity).supportFragmentManager, "Yêu cầu")
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    delay(5000)
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        val fragment: Fragment = HomeFragment()
+                                        val transaction = fragmentManager?.beginTransaction()
+                                        transaction?.replace(R.id.fragmentContainer,fragment)?.commit()
+                                    }
+                                }
+                            }
+                            if(item.status=="2"){
+                                binding.textTrangThai.text="Tài xế đang tới"
+                            }
+                            if(item.status=="3"){
+                                binding.textTrangThai.text="Tài xế đã tới"
+                                binding.btnTime.isVisible=true
+                            }
+                            if(item.status=="5"){
+                                val showDialog = RatingStarFragment(gmail,postId)
+                                showDialog.show((activity as AppCompatActivity).supportFragmentManager, "Yêu cầu")
+
+                            }
+
+                        }
+
+                    }
+
+
+//                    mGoogleMap?.addMarker(MarkerOptions().position( LatLng(userPlaces[0].latitude,userPlaces[0].longitude)).icon(getCustomIcon()).title(""))
+//                    TrackingLocationTaxi(LatLng(userPlaces[0].latitude,userPlaces[0].longitude))
+
+                }catch (e : Exception){
+
+                }
+
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+
+        })
         val mapFragment =
             (childFragmentManager.findFragmentById(R.id.homeMap) as SupportMapFragment?)
         mapFragment?.getMapAsync(this)
@@ -201,7 +277,14 @@ class FollowTaiXeFragment : Fragment(), OnMapReadyCallback, NearLocationInterfac
                 }
             }
         }
+        binding.btnTime.setOnClickListener {
 
+        }
+        binding.huy.setOnClickListener {
+            val showDialog = DialogHuy("Bạn muốn hủy chuyến đi này")
+            showDialog.show((activity as AppCompatActivity).supportFragmentManager, "Yêu cầu")
+
+        }
         binding.enableTraffic.setOnClickListener {
 
             if (isTrafficEnable) {
@@ -258,14 +341,14 @@ class FollowTaiXeFragment : Fragment(), OnMapReadyCallback, NearLocationInterfac
             Log.d(TAG,"kiem tra data HomeFragent allUsers: "+it)
             if(it.toString().isNotEmpty()){
 
-                for(item in it){
-                    var info:Post=item
-                    var td=LatLng(info.lat,info.lng)
-                    Log.d(TAG,"thong tin location university TTTT: "+info)
-                    mMap.addMarker(MarkerOptions().position(td).title(info.postId))
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f))
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(td))
-                }
+//                for(item in it){
+//                    var info:Post=item
+//                    var td=LatLng(info.lat,info.lng)
+//                    Log.d(TAG,"thong tin location university TTTT: "+info)
+//                    mMap.addMarker(MarkerOptions().position(td).title(info.postId))
+//                    mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f))
+//                    mMap.moveCamera(CameraUpdateFactory.newLatLng(td))
+//                }
             }
 
 
@@ -486,9 +569,7 @@ class FollowTaiXeFragment : Fragment(), OnMapReadyCallback, NearLocationInterfac
 
     }
     private fun getDirection(mode: String) {
-        var startLocationLat:Double=16.054407
-        var startLocationLag:Double=108.202167
-//        clearUI()
+
         if (isLocationPermissionOk) {
 //            val url = "https://maps.googleapis.com/maps/api/directions/json?" +
 //                    "origin=" + currentLocation.latitude + "," + currentLocation.longitude +
@@ -496,7 +577,7 @@ class FollowTaiXeFragment : Fragment(), OnMapReadyCallback, NearLocationInterfac
 //                    "&mode=" + mode +
 //                    "&key=" + resources.getString(R.string.API_KEY)
             val url = "https://maps.googleapis.com/maps/api/directions/json?" +
-                    "origin=" + startLocationLat + "," + startLocationLag +
+                    "origin=" + currentLocationEnd.value?.latitude + "," + currentLocationEnd.value?.longitude +
                     "&destination=" + currentLocation.latitude + "," + currentLocation.longitude +
                     "&mode=" + mode +
                     "&key=" + resources.getString(R.string.API_KEY)

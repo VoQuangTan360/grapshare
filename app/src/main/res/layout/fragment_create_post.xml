@@ -92,15 +92,16 @@
        android:layout_height="wrap_content"
        android:layout_gravity="center"
        >
+
       <Button
           android:id="@+id/btnStart"
-          android:layout_width="70dp"
-         android:layout_marginStart="100dp"
-          android:layout_height="70dp"
+          android:layout_width="wrap_content"
+          android:layout_height="50dp"
+          android:layout_marginStart="100dp"
           android:background="@drawable/choose_time_bagruond"
-          android:text="choose"
-          android:textSize="8dp"
-          android:textStyle="bold"/>
+          android:text="Chọn"
+          android:textSize="13dp"
+          android:textStyle="bold" />
       <TextView
           android:id="@+id/textTimeStart"
           android:layout_width="wrap_content"
@@ -113,6 +114,7 @@
 
 
    <TextView
+       android:visibility="gone"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:layout_marginHorizontal="16dp"
@@ -130,6 +132,7 @@
        android:gravity="center_horizontal"
        >
       <androidx.appcompat.widget.AppCompatButton
+          android:visibility="gone"
           android:id="@+id/btnChooseOneDay"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -202,7 +205,7 @@
        android:layout_gravity="bottom"
        android:layout_marginBottom="20dp"
        android:background="@drawable/choose_time_bagruond"
-       android:text="Next"
+       android:text="Tạo "
        android:textSize="15dp"
        android:textStyle="bold"
        />

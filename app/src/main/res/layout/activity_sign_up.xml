@@ -72,7 +72,7 @@
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/white"
                 android:fontFamily="@font/playfair_display"
-                android:hint="Username"
+                android:hint="Tên  tài khoản"
                 android:inputType="text"
                 android:maxLines="1"
                 android:textColor="@color/white" />
@@ -104,7 +104,7 @@
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/white"
                 android:fontFamily="@font/playfair_display"
-                android:hint="Password"
+                android:hint="Mật khẩu"
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:textColor="@color/white" />
@@ -116,7 +116,7 @@
                 android:layout_marginHorizontal="30dp"
                 android:layout_marginTop="10dp"
                 android:padding="15dp"
-                android:text="SignUp"
+                android:text="Đăng ký"
                 android:textStyle="bold"
                 app:cornerRadius="20dp"
                 app:elevation="10dp" />

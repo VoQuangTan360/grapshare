@@ -17,11 +17,8 @@
         android:layout_marginVertical="10dp"
         android:outlineAmbientShadowColor="#010D0E"
         android:outlineSpotShadowColor="#040000"
-
         android:translationZ="10dp"
-
         android:background="@drawable/backgroung_boder">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,7 +27,7 @@
             android:weightSum="10">
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="6"
+                android:layout_weight="5"
                 android:layout_height="wrap_content"
                 android:text="Điểm đến:"
                 android:layout_marginHorizontal="16dp"
@@ -44,11 +41,20 @@
 
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:layout_gravity="end"
                 android:text="Gần đây"
                 android:textSize="15dp"
                 android:backgroundTint="@color/teal_700"/>
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:text="!"
+                android:textSize="35sp"
+                android:textColor="#FF0303"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <TextView
@@ -204,51 +210,13 @@
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="10dp"
-        android:text="Vị trí xuất phát"
-        android:textColor="@color/accentColor"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/textInputDescribe"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="16dp"
 
-        android:maxLines="1"
-        android:textColorHint="@color/itemTextColor"
-        android:paddingStart="10dp"
-        />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="5dp"
-        android:text="Điểm đến"
-        android:textColor="@color/accentColor"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/textInputdestination"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="16dp"
-        android:maxLines="1"
-        android:textColorHint="@color/itemTextColor"
-        android:paddingStart="10dp"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="5dp"
-        android:text="Thời gian đi"
+        android:layout_marginTop="35dp"
+        android:text="Thương lượng thời gian đi"
         android:textColor="@color/accentColor"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -262,7 +230,36 @@
         android:maxLines="1"
         android:textColorHint="@color/itemTextColor"
         android:paddingStart="10dp"
+        android:textColor="@color/black"
         />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="5dp"
+        android:text="Phương tiện"
+        android:textColor="@color/accentColor"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="16dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+
+        >
+        <AutoCompleteTextView
+            android:id="@+id/auto_slect_tranaport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=""
+            android:inputType="none"
+            android:textColor="@color/black"/>
+    </com.google.android.material.textfield.TextInputLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -277,8 +274,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
+        android:textColor="@color/black"
         android:layout_marginEnd="16dp"
-        android:inputType="number"
         android:maxLines="1"
         android:textColorHint="@color/itemTextColor"
         android:paddingStart="10dp"
@@ -287,7 +284,6 @@
         android:layout_width="178dp"
         android:layout_height="103dp"
         android:layout_gravity="center">
-
         <Button
             android:id="@+id/btnPut"
             android:layout_width="170dp"
@@ -296,7 +292,7 @@
 
             android:layout_marginBottom="20dp"
             android:background="@drawable/choose_time_bagruond"
-            android:text="PUT"
+            android:text="ỨNg tuyển"
             android:textSize="15dp"
             android:textStyle="bold" />
 

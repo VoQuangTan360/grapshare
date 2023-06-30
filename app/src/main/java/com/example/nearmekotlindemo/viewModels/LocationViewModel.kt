@@ -30,19 +30,28 @@ class LocationViewModel : ViewModel() {
     private val _nearPosr = MutableLiveData<List<Post>>()
     val nearPosr : LiveData<List<Post>> = _nearPosr
 
-    private val _post = MutableLiveData<List<Post>>()
+    val _post = MutableLiveData<List<Post>>()
+
     val post : LiveData<List<Post>> = _post
+    val postN : LiveData<List<Post>> = _post
     fun setpost(string1: List<Post>){
         _post.value=string1
+    }
+    fun setNearPost(string1: List<Post>){
+        _nearPosr.value=string1
     }
     val post12 = MutableLiveData<Post>()
     fun setpost12(string1: Post){
         post12.value=string1
     }
+    val rating = MutableLiveData<String>()
+    fun setRating(string1: String){
+        rating.value=string1
+    }
 
-
-
-
+    fun createStar(){
+        repository.createStar()
+    }
 
     val idPost = MutableLiveData<String>()
     val post1 : LiveData<String> = idPost
@@ -52,6 +61,18 @@ class LocationViewModel : ViewModel() {
     }
     fun getPostWithUnversity(name:String){
         repository.getPostWithUnversity(name,_allUsers)
+    }
+    fun getFillPostWithUnversity(name:String){
+        Log.d(TAG,"check getFillPostWithUnversity truoc:   "+_allUsers.value)
+        val newList = ArrayList<Post>()
+        for(i in _allUsers.value!!){
+            if(i.timeStart.equals(name)||i.timeStart<name){
+                Log.d(TAG,"check getFillPostWithUnversity co chay:   "+i.toString())
+                newList.add(i)
+            }
+        }
+        _allUsers.value= newList
+        Log.d(TAG,"check getFillPostWithUnversity sau  "+_allUsers.value)
     }
     fun createFollowTaiXe(postId: String,gps: ToaDo){
         repository.createFollowTaiXe(postId,gps)
@@ -67,6 +88,9 @@ class LocationViewModel : ViewModel() {
         repository.getAllPostWithUnversity(_allUsers)
 
 
+    }
+    fun getAllPostWithUnversityPlance(){
+        repository.getAllPostWithUnversity(_allUsers)
     }
     fun getPostWithUnversityAndIDcheck(id:String){
         var i=id

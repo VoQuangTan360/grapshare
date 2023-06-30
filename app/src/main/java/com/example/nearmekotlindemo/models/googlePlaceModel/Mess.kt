@@ -5,8 +5,11 @@ data class Mess(
     var time:String="",
     var postId:String="",
     var gmail:String="",
-    var phone:String="",
-    var start:String="",
+    var image:String="",
+    var mess:String="",
     var status:String="",
-    var id:String=""
+    var id:String="",
+    var name:String="",
+    var vehicle:String=""
+
 )
